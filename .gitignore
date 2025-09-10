@@ -5,6 +5,9 @@
 # `$XDG_CONFIG_HOME/git/ignore` or `~/.config/git/ignore`
 
 # Ignore bundler config.
+.vite
+/assets
+/public
 /node_modules
 /.bundle
 
