@@ -1,8 +1,8 @@
 # AxisPoint
-ruby is on rails
+ruby is not rails
 
 made by felix, phelix
 
 source?:
-"ruby is on rails" - isac newton 1967
+"ruby is no longer on rails" - isac newton 1967
 
