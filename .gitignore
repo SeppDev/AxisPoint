@@ -5,6 +5,7 @@
 # `$XDG_CONFIG_HOME/git/ignore` or `~/.config/git/ignore`
 
 # Ignore bundler config.
+/node_modules
 /.bundle
 
 # Ignore all environment files.
