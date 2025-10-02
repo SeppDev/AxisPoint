@@ -1,3 +1,8 @@
+/* Use class-based dark mode (html.dark ...) for Tailwind v4 */
+@theme {
+  --dark: ".dark";
+}
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -5,11 +10,13 @@
 @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/forms";
 
-
-@import "tailwindcss";
-
 /* 
  Choose between `mocha`, `frappe` or `macchiato` for dark mode, latte is included as the light mode flavour.
  We recommend using `mocha` for dark mode.
 */
 @import "@catppuccin/tailwindcss/mocha.css";
+/* @import "@catppuccin/tailwindcss/latte.css";  */
+
+/* Base colors from Catppuccin tokens */
+:root { color-scheme: light dark; }
+body { background-color: var(--color-ctp-base); color: var(--color-ctp-text); }
