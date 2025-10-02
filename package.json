@@ -2,6 +2,7 @@
   "private": true,
   "type": "module",
   "devDependencies": {
+    "@catppuccin/tailwindcss": "^1.0.0",
     "@internationalized/date": "^3.8.2",
     "@lucide/svelte": "<1.0",
     "bits-ui": "^2.9.1",
