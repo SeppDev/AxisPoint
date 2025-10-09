@@ -15,6 +15,7 @@
         "typescript": "^5.8.3",
       },
       "devDependencies": {
+        "@catppuccin/tailwindcss": "^1.0.0",
         "@internationalized/date": "^3.8.2",
         "@lucide/svelte": "<1.0",
         "bits-ui": "^2.9.1",
@@ -41,6 +42,8 @@
     },
   },
   "packages": {
+    "@catppuccin/tailwindcss": ["@catppuccin/tailwindcss@1.0.0", "", {}, "sha512-l8pOlcYe2ncGd8a1gUmL5AHmKlxR2+CHuG5kt4Me6IZwzntW1DoLmj89BH+DcsPHBsdDGLrTSv35emlYyU3FeQ=="],
+
     "@esbuild/aix-ppc64": ["@esbuild/aix-ppc64@0.25.9", "", { "os": "aix", "cpu": "ppc64" }, "sha512-OaGtL73Jck6pBKjNIe24BnFE6agGl+6KxDtTfHhy1HmhthfKouEcOhqpSL64K4/0WCtbKFLOdzD/44cJ4k9opA=="],
 
     "@esbuild/android-arm": ["@esbuild/android-arm@0.25.9", "", { "os": "android", "cpu": "arm" }, "sha512-5WNI1DaMtxQ7t7B6xa572XMXpHAaI/9Hnhk8lcxF4zVN4xstUgTlvuGDorBguKEnZO70qwEcLpfifMLoxiPqHQ=="],
