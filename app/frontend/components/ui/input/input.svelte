@@ -46,7 +46,11 @@
     {...restProps}
   />
 {:else if type === "area"}
-  <textarea bind:value class={makeClass(className)}></textarea>
+  <textarea
+    bind:value
+    placeholder={restProps.placeholder}
+    class={makeClass(className)}
+  ></textarea>
 {:else}
   <input
     bind:this={ref}
