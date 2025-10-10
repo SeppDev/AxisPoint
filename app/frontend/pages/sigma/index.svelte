@@ -9,8 +9,8 @@
 
 {#each [...Array(count).keys()] as item (item)}
 <button onclick={() => {
-    count = count * 2
+    count = count * 2;
 }}>
-    <img src="https://chrisvis.me/src/humble.gif" alt="sad sigma like">
+    <img src="https://chrisvis.me/src/humble.gif" class=" w-16 h-16" alt="sad sigma like">
 </button>
 {/each}
