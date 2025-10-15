@@ -1,4 +1,5 @@
 class Api::KlachtController < ApplicationController
+  skip_before_action :authenticate
   protect_from_forgery with: :null_session 
   
   def create
@@ -14,6 +15,6 @@ class Api::KlachtController < ApplicationController
   private
 
   def body_params
-    params.require(:klacht).permit(:long, :lang, :name, :description)
+    params.require(:klacht).permit(:name, :description, :latitude, :longitude)
   end 
 end

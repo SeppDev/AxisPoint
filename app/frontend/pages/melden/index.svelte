@@ -9,9 +9,9 @@
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        body: {
-          long: 12.34,
-          lang: 56.78,
+        klacht: {
+          longitude: 12.34,
+          latitude: 56.78,
           name: "Nova Shrine",
           description: "holy aura spotted fr",
         },
