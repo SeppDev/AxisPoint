@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_10_081330) do
-  create_table "klachten", force: :cascade do |t|
-    t.float "longitude", null: false
-    t.float "latitude", null: false
-    t.string "title", null: false
-    t.text "description", null: false
+ActiveRecord::Schema[8.0].define(version: 2025_10_10_083635) do
+  create_table "klachts", force: :cascade do |t|
+    t.float "longitude"
+    t.float "latitude"
+    t.string "title"
+    t.text "description"
+    t.date "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

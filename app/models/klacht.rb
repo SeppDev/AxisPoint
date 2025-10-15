@@ -1,0 +1,2 @@
+class Klacht < ApplicationRecord
+end
