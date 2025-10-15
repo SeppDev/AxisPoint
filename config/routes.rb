@@ -31,7 +31,7 @@ Rails.application.routes.draw do
   get :melden, to: "melden#index"
 
   namespace :api do
-    resources :klacht, only: [:create]
+    resources :klacht, only: [:create, :index]
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

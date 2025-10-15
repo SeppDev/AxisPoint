@@ -1,5 +1,10 @@
 class Api::KlachtController < ApplicationController
-  skip_before_action :authenticate
+
+  before_action :authenticate, only: [:index]
+  
+  # Skip authentication for :create (POST)
+  skip_before_action :authenticate, only: [:create]
+
   protect_from_forgery with: :null_session 
   
   def create
@@ -10,6 +15,11 @@ class Api::KlachtController < ApplicationController
     else 
       render json: { errors: post.errors.full_messages }, status: :unprocessable_entity
     end
+  end
+
+  def index
+    klachten = Klacht.all
+    render json: klachten
   end
 
   private
