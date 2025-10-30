@@ -1,7 +1,7 @@
 
 <script lang="ts">
     let count = $state(1);
-</script>
+ </script>
 
 
 <p>like for sad sigma</p>
