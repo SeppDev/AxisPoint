@@ -1,22 +1,44 @@
-<script>
+<script lang="ts">
   import { Button } from "@/components/ui/button";
   import { Input } from "@/components/ui/input";
 
-  async function meld() {
-    let respond = fetch("/api/klacht", {
+  let name = $state();
+  let description = $state();
+
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(meld, errorCallback, {
+        enableHighAccuracy: true,
+      });
+    } else {
+      console.warn("No location");
+    }
+  }
+
+  async function meld(position: GeolocationPosition) {
+    let response = await fetch("/api/klacht", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         klacht: {
-          longitude: 12.34,
-          latitude: 56.78,
-          name: "Nova Shrine",
-          description: "holy aura spotted fr",
+          longitude: position.coords.longitude,
+          latitude: position.coords.latitude,
+          name,
+          description,
         },
       }),
     });
+    console.log(response);
+  }
+  function errorCallback() {
+    console.log("Failed to get position");
+  }
+
+  function onSubmit(event: Event) {
+    event.preventDefault();
+    getLocation();
   }
 </script>
 
@@ -27,12 +49,12 @@
     <p class="text-2xl font-bold">Melding</p>
     <form class="flex flex-col gap-4">
       <p>Naam</p>
-      <Input placeholder="Bob" type="text" />
+      <Input bind:value={name} type="text" />
       <p>Beschrijving</p>
-      <Input class="h-30" placeholder="Rotzooi" type="area" />
+      <Input bind:value={description} class="h-30" type="area" />
       <p>Foto</p>
       <Input type="file" />
-      <Button onclick={meld}>Meld</Button>
+      <Button onclick={onSubmit}>Meld</Button>
     </form>
   </div>
 </div>
