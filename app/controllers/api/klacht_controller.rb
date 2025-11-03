@@ -1,25 +1,29 @@
 # frozen_string_literal: true
 
 class Api::KlachtController < ApplicationController
-  before_action :authenticate, only: [:index, :delete]
-  
-  # Skip authentication for :create (POST)
-  skip_before_action :authenticate, only: [:create]
+  before_action :authenticate, only: [:index, :destroy]
 
-  protect_from_forgery with: :null_session 
-  
+  skip_before_action :authenticate, only: [:create]
+  protect_from_forgery with: :null_session
+
   def create
     klacht = Klacht.new(body_params)
 
     if klacht.save
-      render json: { status: "success" }
-    else 
+      render json: { status: 'success' }
+    else
       render json: { errors: post.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
-  def delete
-    render json: { status: "yo man" }
+  def destroy
+    klacht = Klacht.find_by(id: params[:id])
+    if klacht
+      klacht.destroy
+      render json: { status: 'success' }
+    else
+      render json: { status: 'error' }, status: :not_found
+    end
   end
 
   def index
@@ -31,5 +35,5 @@ class Api::KlachtController < ApplicationController
 
   def body_params
     params.require(:klacht).permit(:name, :description, :latitude, :longitude)
-  end 
+  end
 end

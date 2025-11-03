@@ -1,14 +1,20 @@
 <script lang="ts">
-  import type { Snippet } from "svelte"
+  import type { Snippet } from "svelte";
 
   import Navbar from "@/components/navbar.svelte";
 
   interface Props {
-    children: Snippet
+    children: Snippet;
   }
 
-  let  {children} : Props = $props()
+  let { children }: Props = $props();
 </script>
 
-<Navbar />
-{@render children()}
+<div
+  class="flex flex-col flex-grow overflow-none max-h-screen h-screen w-screen"
+>
+  <Navbar />
+  <main class="grow overflow-auto">
+    {@render children()}
+  </main>
+</div>

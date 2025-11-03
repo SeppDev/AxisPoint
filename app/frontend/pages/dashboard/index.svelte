@@ -1,16 +1,10 @@
 <script lang="ts">
   import L, { Map } from "leaflet";
 
-  import AppLayout from "@/layouts/app-layout.svelte";
+  import Layout from "@/layouts/Layout.svelte";
   import { dashboardPath } from "@/routes";
   import { type BreadcrumbItem } from "@/types";
-
-  const breadcrumbs: BreadcrumbItem[] = [
-    {
-      title: "Dashboard",
-      href: dashboardPath(),
-    },
-  ];
+  import Button from "@/components/ui/button/button.svelte";
 
   let map: Map;
   const initialView = [51.924419, 4.477733];
@@ -54,11 +48,14 @@
   }
 
   getKlachten();
-</script>
 
-<svelte:head>
-  <title>{breadcrumbs[breadcrumbs.length - 1].title}</title>
-</svelte:head>
+  async function deleteKlacht(index: number, klacht: any) {
+    klachten.splice(index, 1);
+    let response = await fetch(`api/klacht/${klacht.id}`, {
+      method: "DELETE",
+    });
+  }
+</script>
 
 <svelte:window on:resize={resizeMap} />
 <link
@@ -67,22 +64,25 @@
   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
   crossorigin=""
 />
-<AppLayout {breadcrumbs}>
-  <div class="flex flex-row h-full w-full overflow-none">
-    <div class="w-2/3 h-full" use:mapAction></div>
+<Layout>
+  <div class="flex flex-row flex-grow h-full w-full overflow-none">
+    <div class="grow h-full" use:mapAction></div>
     <div
-      class="p-4 w-1/3 flex flex-col h-full overflow-scroll items-center gap-2"
+      class="p-4 w-120 flex flex-col max-h-full overflow-x-none overflow-y-auto items-center gap-2"
     >
-      {#each klachten as klacht}
-        {@render Klacht(klacht)}
+      {#each klachten as klacht, index}
+        {@render Klacht(index, klacht)}
       {/each}
     </div>
   </div>
-</AppLayout>
+</Layout>
 
-{#snippet Klacht(klacht: any)}
+{#snippet Klacht(index: number, klacht: any)}
   <div class="w-full p-4 rounded-xl bg-neutral-700">
     <p class="text-xl">{klacht.name}</p>
     <p class="">{klacht.description}</p>
+    <Button onclick={() => deleteKlacht(index, klacht)} variant="destructive"
+      >Delete</Button
+    >
   </div>
 {/snippet}

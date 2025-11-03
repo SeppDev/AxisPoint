@@ -3,7 +3,7 @@
 </script>
 
 <div
-  class=" p-2 bg-ctp-crust h-12 w-screen absolute top-0 z-50 justify-between flex flex-row text-2xl"
+  class=" p-2 bg-ctp-crust h-12 w-screen top-0 z-50 justify-between flex flex-row text-2xl"
 >
   <div>
     <!-- <Logo /> -->

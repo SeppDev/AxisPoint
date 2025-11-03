@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Button } from "@/components/ui/button";
   import * as Dialog from "@/components/ui/dialog";
-  import DialogClose from "@/components/ui/dialog/dialog-close.svelte";
   import { Input } from "@/components/ui/input";
   import Layout from "@/layouts/Layout.svelte";
 
@@ -81,7 +80,7 @@
     </Dialog.Portal>
   </Dialog.Root>
 
-  <div class="flex items-center justify-center min-h-screen w-screen">
+  <div class="flex items-center justify-center h-full w-full">
     <div
       class="md:w-100 md:rounded-xl not-md:justify-end not-md:w-screen not-md:h-screen p-4 flex flex-col bg-ctp-crust"
     >
