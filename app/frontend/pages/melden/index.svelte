@@ -2,8 +2,9 @@
   import { Button } from "@/components/ui/button";
   import { Input } from "@/components/ui/input";
 
-  let name = $state();
-  let description = $state();
+  let name: string = $state("");
+  let description: string = $state("");
+  let image: File | null = $state(null);
 
   function getLocation() {
     if (navigator.geolocation) {
@@ -16,22 +17,25 @@
   }
 
   async function meld(position: GeolocationPosition) {
+    const formData = new FormData();
+    formData.append("klacht[name]", name);
+    formData.append("klacht[description]", description);
+    formData.append("klacht[longitude]", position.coords.longitude.toString());
+    formData.append("klacht[latitude]", position.coords.latitude.toString());
+
+    if (image) {
+      formData.append("klacht[image]", image);
+    }
+    console.log(image); // should show File object
+    console.log(formData.get("klacht[image]")); // should not be null
+
     let response = await fetch("/api/klacht", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        klacht: {
-          longitude: position.coords.longitude,
-          latitude: position.coords.latitude,
-          name,
-          description,
-        },
-      }),
+      body: formData,
     });
     console.log(response);
   }
+
   function errorCallback() {
     console.log("Failed to get position");
   }
@@ -53,7 +57,18 @@
       <p>Beschrijving</p>
       <Input bind:value={description} class="h-30" type="area" />
       <p>Foto</p>
-      <Input type="file" />
+      {#if image}
+        <img src={URL.createObjectURL(image)} alt="preview" class="h-40" />
+      {/if}
+      <input
+        type="file"
+        accept="image/*"
+        onchange={(e) => {
+          const target = e.target as HTMLInputElement;
+          image = target.files?.[0] ?? null;
+          console.log("selected file:", image);
+        }}
+      />
       <Button onclick={onSubmit}>Meld</Button>
     </form>
   </div>
