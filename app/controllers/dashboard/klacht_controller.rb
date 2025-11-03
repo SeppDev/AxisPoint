@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class InfoController < InertiaController
+class Dashboard::KlachtController < InertiaController
   skip_before_action :authenticate
   before_action :perform_authentication
 
