@@ -1,6 +1,7 @@
-class Api::KlachtController < ApplicationController
+# frozen_string_literal: true
 
-  before_action :authenticate, only: [:index]
+class Api::KlachtController < ApplicationController
+  before_action :authenticate, only: [:index, :delete]
   
   # Skip authentication for :create (POST)
   skip_before_action :authenticate, only: [:create]
@@ -11,10 +12,14 @@ class Api::KlachtController < ApplicationController
     klacht = Klacht.new(body_params)
 
     if klacht.save
-      render json: { status: "success", item: body_params}
+      render json: { status: "success" }
     else 
       render json: { errors: post.errors.full_messages }, status: :unprocessable_entity
     end
+  end
+
+  def delete
+    render json: { status: "yo man" }
   end
 
   def index

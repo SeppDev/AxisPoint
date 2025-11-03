@@ -1,6 +1,4 @@
 <script lang="ts">
-  // import { Head } from "@inertiajs/svelte"
-
   import L, { Map } from "leaflet";
 
   import AppLayout from "@/layouts/app-layout.svelte";
@@ -41,6 +39,21 @@
       map.invalidateSize();
     }
   }
+
+  let klachten: any[] = $state([]);
+  async function getKlachten() {
+    let response = await fetch("api/klacht");
+    let text = await response.text();
+    klachten = JSON.parse(text);
+
+    for (let klacht of klachten) {
+      new L.Marker([klacht.latitude, klacht.longitude], {
+        title: klacht.name,
+      }).addTo(map);
+    }
+  }
+
+  getKlachten();
 </script>
 
 <svelte:head>
@@ -55,5 +68,21 @@
   crossorigin=""
 />
 <AppLayout {breadcrumbs}>
-  <div id="map" class="w-full h-full" use:mapAction></div>
+  <div class="flex flex-row h-full w-full overflow-none">
+    <div class="w-2/3 h-full" use:mapAction></div>
+    <div
+      class="p-4 w-1/3 flex flex-col h-full overflow-scroll items-center gap-2"
+    >
+      {#each klachten as klacht}
+        {@render Klacht(klacht)}
+      {/each}
+    </div>
+  </div>
 </AppLayout>
+
+{#snippet Klacht(klacht: any)}
+  <div class="w-full p-4 rounded-xl bg-neutral-700">
+    <p class="text-xl">{klacht.name}</p>
+    <p class="">{klacht.description}</p>
+  </div>
+{/snippet}
