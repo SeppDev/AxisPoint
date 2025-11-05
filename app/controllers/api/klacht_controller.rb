@@ -1,8 +1,10 @@
-class Api::KlachtController < ApplicationController
-  before_action :authenticate, only: [:index]
+# frozen_string_literal: true
 
-  # Skip authentication for :create (POST)
+class Api::KlachtController < ApplicationController
+  before_action :authenticate, only: [:index, :destroy]
+
   skip_before_action :authenticate, only: [:create]
+  protect_from_forgery with: :null_session
 
   protect_from_forgery with: :null_session
 
@@ -12,9 +14,19 @@ class Api::KlachtController < ApplicationController
     klacht.image.attach(params[:klacht][:image]) if params[:klacht][:image].present?
 
     if klacht.save
-      render json: klacht, status: :created
+      render json: { status: 'success' }
     else
-      render json: { errors: klacht.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: post.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    klacht = Klacht.find_by(id: params[:id])
+    if klacht
+      klacht.destroy
+      render json: { status: 'success' }
+    else
+      render json: { status: 'error' }, status: :not_found
     end
   end
 
