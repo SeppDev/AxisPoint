@@ -6,8 +6,12 @@ class Api::KlachtController < ApplicationController
   skip_before_action :authenticate, only: [:create]
   protect_from_forgery with: :null_session
 
+  protect_from_forgery with: :null_session
+
   def create
-    klacht = Klacht.new(body_params)
+    klacht = Klacht.new(klacht_params)
+
+    klacht.image.attach(params[:klacht][:image]) if params[:klacht][:image].present?
 
     if klacht.save
       render json: { status: 'success' }
@@ -33,7 +37,7 @@ class Api::KlachtController < ApplicationController
 
   private
 
-  def body_params
-    params.require(:klacht).permit(:name, :description, :latitude, :longitude)
+  def klacht_params
+    params.require(:klacht).permit(:name, :description, :latitude, :longitude, :image)
   end
 end
