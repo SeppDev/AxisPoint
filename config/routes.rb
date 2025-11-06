@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     resource :password_reset,     only: [:new, :edit, :create, :update]
   end
 
-  # get :dashboard, to: "dashboard#index"
+  get :dashboard, to: "dashboard#index"
   
   namespace :settings do
     resource :profile, only: [:show, :update]
