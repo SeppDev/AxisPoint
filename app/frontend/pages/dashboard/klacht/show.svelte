@@ -1,9 +1,4 @@
 <script lang="ts">
-  import AppLayout from "@/layouts/app-layout.svelte";
-  import { dashboardPath, infoPath } from "@/routes";
-  import L, { Map } from "leaflet";
-
-  import { type BreadcrumbItem } from "@/types";
   import KlachtLayout from "@/layouts/KlachtLayout.svelte";
 
   interface Klacht {

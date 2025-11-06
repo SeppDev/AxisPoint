@@ -4,32 +4,31 @@
   const initialView = [51.924419, 4.477733];
  
 
-  let klachten: any[] = $state([]);
-  async function getKlachten() {
-    let response = await fetch("/api/klacht");
-    let text = await response.text();
-    klachten = JSON.parse(text);
-
-    return klachten
+  interface Klacht {
+    id: number;
+    name: string;
+    description: string;
+    latitude: number;
+    longitude: number;
+    created_at: string;
+    updated_at: string;
   }
 
-  getKlachten();
+
+  let { klachten}: { klachten: Klacht[] } = $props();
+  
 
 </script>
 
 <KlachtLayout {klachten} {initialView}>
-  {#await getKlachten()}
-    <p>loading...</p>
-  {:then klachten} 
   {#each klachten as klacht, index}
     {@render Klacht(index, klacht)}
   {/each}
-  {/await}
 </KlachtLayout>
 
 {#snippet Klacht(index: number, klacht: any)}
-  <div class="w-full p-4 rounded-xl bg-neutral-700">
+  <a class="w-full p-4 rounded-xl bg-neutral-700" href="/dashboard/klacht/{klacht.id}">
     <p class="text-xl">{klacht.name}</p>
     <p class="">{klacht.description}</p>
-  </div>
+  </a>
 {/snippet}

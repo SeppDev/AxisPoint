@@ -4,6 +4,14 @@ class Dashboard::KlachtController < InertiaController
   skip_before_action :authenticate
   before_action :perform_authentication
 
+  def index
+    klachten = Klacht.all
+
+    render inertia: {
+      klachten: klachten.as_json(only: %i[id name description latitude longitude created_at updated_at])
+    }
+  end
+
   def show
     klacht = Klacht.find_by!(id: params[:slug])
 

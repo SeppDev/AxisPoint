@@ -108,4 +108,5 @@
       <Button onclick={onSubmit}>Meld</Button>
     </form>
   </div>
+  </div>
 </Layout>

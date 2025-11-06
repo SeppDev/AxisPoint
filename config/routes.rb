@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     resource :password_reset,     only: [:new, :edit, :create, :update]
   end
 
-  get :dashboard, to: "dashboard#index"
+  # get :dashboard, to: "dashboard#index"
   
   namespace :settings do
     resource :profile, only: [:show, :update]
@@ -29,7 +29,9 @@ Rails.application.routes.draw do
   
   get :sigma, to: "sigma#index"
   get :melden, to: "melden#index"
-  get "/dashboard/klacht/:slug", to: "dashboard/klacht#show", as: :info
+  
+  get "/dashboard/klacht/:slug", to: "dashboard/klacht#show", as: :klachtpage
+  get "/dashboard/klacht", to: "dashboard/klacht#index", as: :klachten
 
   namespace :api do
     resources :klacht, only: [:create, :index, :destroy]
