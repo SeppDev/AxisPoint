@@ -5,10 +5,11 @@ class Dashboard::KlachtController < InertiaController
   before_action :perform_authentication
 
   def index
+    # Return all klachten; the frontend map layout will provide filtering by status via tabs
     klachten = Klacht.all
 
     render inertia: {
-      klachten: klachten.as_json(only: %i[id name description latitude longitude created_at updated_at])
+      klachten: klachten.as_json(only: %i[id name description latitude longitude created_at updated_at status])
     }
   end
 
@@ -16,7 +17,7 @@ class Dashboard::KlachtController < InertiaController
     klacht = Klacht.find_by!(id: params[:slug])
 
     render inertia: {
-      klacht: klacht.as_json(only: %i[id name description latitude longitude created_at updated_at]),
+      klacht: klacht.as_json(only: %i[id name description latitude longitude created_at updated_at status]),
       image_url: klacht.image.attached? ? url_for(klacht.image) : nil
     }
   rescue ActiveRecord::RecordNotFound
