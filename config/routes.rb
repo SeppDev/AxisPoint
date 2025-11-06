@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   
   get :sigma, to: "sigma#index"
   get :melden, to: "melden#index"
+  get "/dashboard/klacht/:slug", to: "dashboard/klacht#show", as: :info
 
   namespace :api do
     resources :klacht, only: [:create, :index, :destroy]
