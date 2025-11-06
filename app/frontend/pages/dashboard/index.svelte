@@ -136,7 +136,16 @@
            style="background: linear-gradient(135deg, var(--catppuccin-color-mantle), var(--catppuccin-color-crust)); color: var(--catppuccin-color-text);">
         <div class="w-full h-full max-w-2xl max-h-80 relative px-4 py-2">
           <canvas bind:this={chartCanvas} class="w-full h-full rounded-lg"></canvas>
-          
+
+          <!-- quick link to open full map (mp) page -->
+          <div class="absolute top-3 right-3">
+            <a href="/dashboard/klacht"
+               class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold shadow"
+               style="background: var(--catppuccin-color-sapphire); color: var(--catppuccin-color-crust);">
+              Open map
+            </a>
+          </div>
+
         </div>
       </div>
 
