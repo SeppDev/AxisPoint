@@ -62,7 +62,7 @@
         datasets: [
           {
             data: [stats.open, stats.in_progress, stats.completed],
-            backgroundColor: ["#F59E0B", "#3B82F6", "#10B981"],
+            backgroundColor: ["#e78284", "#e5c890", "#a6d189"],
             hoverOffset: 8,
             borderWidth: 0,
           },
