@@ -12,9 +12,9 @@
     variants: {
       variant: {
         default:
-          "bg-ctp-mauve-900 text-ctp-mauve-100 shadow-xs hover:bg-ctp-mauve-700",
+          "bg-ctp-mauve-900 text-ctp-surface0 shadow-xs hover:bg-ctp-mauve-700",
         destructive:
-          "bg-ctp-red-500 shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 text-white",
+          "bg-ctp-red-500 shadow-xs hover:bg-ctp-red-500/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-ctp-red-500/60 text-white",
         outline:
           "bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 border",
         secondary:

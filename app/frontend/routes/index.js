@@ -547,6 +547,15 @@ export const serialize = __jsr.serialize;
 
 /**
  * Generates rails route to
+ * /api/klacht/:id(.:format)
+ * @param {any} id
+ * @param {object | undefined} options
+ * @returns {string} route path
+ */
+export const apiKlachtPath = /*#__PURE__*/ __jsr.r({"id":{"r":true},"format":{}}, [2,[7,"/"],[2,[6,"api"],[2,[7,"/"],[2,[6,"klacht"],[2,[7,"/"],[2,[3,"id"],[1,[2,[8,"."],[3,"format"]]]]]]]]]);
+
+/**
+ * Generates rails route to
  * /api/klacht(.:format)
  * @param {object | undefined} options
  * @returns {string} route path

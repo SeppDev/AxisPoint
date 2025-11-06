@@ -32,7 +32,7 @@ Rails.application.routes.draw do
   get "/dashboard/klacht/:slug", to: "dashboard/klacht#show", as: :info
 
   namespace :api do
-    resources :klacht, only: [:create, :index]
+    resources :klacht, only: [:create, :index, :destroy]
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
