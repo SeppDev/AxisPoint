@@ -7,7 +7,6 @@
 >
   <div>
     <!-- <Logo /> -->
-    <Logo />
   </div>
   <nav>
     <a href="/">home</a>

@@ -6,8 +6,10 @@
     children,
     klachten,
     initialView,
-  }: { children: any; klachten: any[]; initialView: any[] } = $props();
+    showTabs = false,
+  }: { children: any; klachten: any[]; initialView: any[]; showTabs?: boolean } = $props();
 
+  // selectedStatus: 'all' | 'open' | 'in_progress' | 'completed'
   let selectedStatus: string = $state('all');
 
   let map: Map;
@@ -40,9 +42,6 @@
     markers = [];
 
     for (let klacht of klachten) {
-      // filter by selectedStatus
-      if (selectedStatus !== 'all' && klacht.status !== selectedStatus) continue;
-
       const marker = new L.Marker([klacht.latitude, klacht.longitude], {
         title: klacht.name,
       }).addTo(map);
@@ -93,18 +92,29 @@
 <Layout>
   <div class="flex flex-row flex-grow h-full w-full overflow-none">
     <div class="grow h-full">
-      <div class="klacht-tabs" >
-        <button class="klacht-tab {selectedStatus === 'all' ? 'active' : ''}" onclick={() => (selectedStatus = 'all')}>All</button>
-        <button class="klacht-tab {selectedStatus === 'open' ? 'active' : ''}" onclick={() => (selectedStatus = 'open')}>Open</button>
-        <button class="klacht-tab {selectedStatus === 'in_progress' ? 'active' : ''}" onclick={() => (selectedStatus = 'in_progress')}>In progress</button>
-        <button class="klacht-tab {selectedStatus === 'completed' ? 'active' : ''}" onclick={() => (selectedStatus = 'completed')}>Completed</button>
-      </div>
+      {#if showTabs}
+        <div class="klacht-tabs" >
+          <button class="klacht-tab {selectedStatus === 'all' ? 'active' : ''}" onclick={() => (selectedStatus = 'all')}>All</button>
+          <button class="klacht-tab {selectedStatus === 'open' ? 'active' : ''}" onclick={() => (selectedStatus = 'open')}>Open</button>
+          <button class="klacht-tab {selectedStatus === 'in_progress' ? 'active' : ''}" onclick={() => (selectedStatus = 'in_progress')}>In progress</button>
+          <button class="klacht-tab {selectedStatus === 'completed' ? 'active' : ''}" onclick={() => (selectedStatus = 'completed')}>Completed</button>
+        </div>
+      {/if}
       <div class="h-full" use:mapAction></div>
     </div>
     <div
       class="p-4 w-120 flex flex-col max-h-full overflow-x-none overflow-y-auto items-center gap-2"
     >
-      {@render children()}
+      {#if showTabs}
+        {#each klachten.filter(k => selectedStatus === 'all' || k.status === selectedStatus) as klacht}
+          <a class="w-full p-4 rounded-xl bg-neutral-700" href={`/dashboard/klacht/${klacht.id}`}>
+            <p class="text-xl">{klacht.name}</p>
+            <p class="">{klacht.description}</p>
+          </a>
+        {/each}
+      {:else}
+        {@render children()}
+      {/if}
     </div>
   </div>
 </Layout>

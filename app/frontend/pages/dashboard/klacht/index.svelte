@@ -21,15 +21,4 @@
 
 </script>
 
-<KlachtLayout {klachten} {initialView}>
-  {#each klachten as klacht, index}
-    {@render Klacht(index, klacht)}
-  {/each}
-</KlachtLayout>
-
-{#snippet Klacht(index: number, klacht: any)}
-  <a class="w-full p-4 rounded-xl bg-neutral-700" href="/dashboard/klacht/{klacht.id}">
-    <p class="text-xl">{klacht.name}</p>
-    <p class="">{klacht.description}</p>
-  </a>
-{/snippet}
+<KlachtLayout {klachten} {initialView} showTabs={true} ><p></p></KlachtLayout>
