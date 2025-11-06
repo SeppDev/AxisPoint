@@ -4,6 +4,7 @@
   import L, { Map } from "leaflet";
 
   import { type BreadcrumbItem } from "@/types";
+  import KlachtLayout from "@/layouts/KlachtLayout.svelte";
 
   interface Klacht {
     id: number;
@@ -17,66 +18,11 @@
 
   let { klacht, image_url }: { klacht: Klacht; image_url?: string } = $props();
 
-  const breadcrumbs: BreadcrumbItem[] = [
-    {
-      title: "Dashboard",
-      href: dashboardPath(),
-    },
-    {
-      title: "klacht",
-      href: "",
-    },
-    {
-      title: `klacht: ${klacht.id} "${klacht.name}"`,
-      href: infoPath(klacht.id),
-    },
-  ];
-
-  let map: Map;
   const initialView = [klacht.latitude, klacht.longitude];
-  function createMap(container: HTMLElement) {
-    let m = L.map(container, { preferCanvas: true }).setView(
-      initialView as any,
-      13,
-    );
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-      {
-        attribution: `&copy;<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>`,
-        // maxZoom: 0,
-      },
-    ).addTo(m);
-
-    return m;
-  }
-
-  function mapAction(container: HTMLElement) {
-    map = createMap(container);
-    let marker = L.marker([klacht.latitude, klacht.longitude]).addTo(map);
-  }
-
-  function resizeMap() {
-    if (map) {
-      map.invalidateSize();
-    }
-  }
+  
 </script>
 
-<svelte:head>
-  <title>{breadcrumbs[breadcrumbs.length - 1].title}</title>
-</svelte:head>
-
-<svelte:window on:resize={resizeMap} />
-
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-  integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-  crossorigin=""
-/>
-
-<AppLayout {breadcrumbs}>
-  <div class="flex w-full flex-row h-full">
+<KlachtLayout {initialView} klachten={[klacht]} >
     <div class="max-w-3xl mx-auto p-6">
       {#if image_url}
         <img
@@ -99,6 +45,4 @@
       </div>
     </div>
 
-    <div id="map" class="w-full h-full" use:mapAction></div>
-  </div>
-</AppLayout>
+</KlachtLayout>
