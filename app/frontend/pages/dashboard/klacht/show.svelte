@@ -10,6 +10,7 @@
     created_at: string;
     updated_at: string;
     status?: string;
+    email?: string;
   }
 
   async function onStatusChange(e: Event) {
@@ -58,9 +59,14 @@
         />
       {/if}
 
+
       <h1 class="text-2xl sm:text-3xl md:text-3xl font-extrabold mb-3">
         {klacht?.name}
       </h1>
+
+      {#if klacht?.email}
+        <p class="text-base text-gray-300 mb-2">Email: {klacht.email}</p>
+      {/if}
 
       {#if klacht?.description}
         <p class="text-lg sm:text-base leading-relaxed">{klacht.description}</p>

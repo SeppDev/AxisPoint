@@ -49,6 +49,6 @@ class Api::KlachtController < ApplicationController
   private
 
   def klacht_params
-    params.require(:klacht).permit(:name, :description, :latitude, :longitude, :image, :status)
+  params.require(:klacht).permit(:name, :description, :latitude, :longitude, :image, :status, :email)
   end
 end
