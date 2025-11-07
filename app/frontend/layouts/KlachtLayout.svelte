@@ -103,7 +103,7 @@
       <div class="h-full" use:mapAction></div>
     </div>
     <div
-      class="p-4 w-120 flex flex-col max-h-full overflow-x-none overflow-y-auto items-center gap-2"
+      class="p-4 w-120  flex-col max-h-full overflow-x-none overflow-y-auto items-center gap-2 {showTabs ? "hidden md:flex" : "flex"}"
     >
       {#if showTabs}
         {#each klachten.filter(k => selectedStatus === 'all' || k.status === selectedStatus) as klacht}

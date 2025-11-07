@@ -25,7 +25,7 @@ class Api::KlachtController < ApplicationController
     return render json: { status: 'error' }, status: :not_found unless klacht
 
     if klacht.update(klacht_params)
-      render json: { status: 'success', klacht: klacht }
+      render json: { status: 'success' }
     else
       render json: { errors: klacht.errors.full_messages }, status: :unprocessable_entity
     end
