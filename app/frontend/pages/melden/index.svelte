@@ -39,7 +39,7 @@
       openDialog("Vul een beschrijving in");
       return;
     }
-    
+
     const formData = new FormData();
     formData.append("klacht[name]", name);
     formData.append("klacht[description]", description);
@@ -58,7 +58,9 @@
     openDialog("Melding gestuurd");
   }
 
-  function errorCallback() {}
+  function errorCallback() {
+    openDialog("Locatie opvragen mislukt");
+  }
 
   function onSubmit(event: Event) {
     event.preventDefault();
@@ -80,32 +82,33 @@
     </Dialog.Portal>
   </Dialog.Root>
 
-<div class="flex items-center justify-center min-h-screen w-screen">
-  <div
-    class="md:w-100 md:rounded-xl not-md:justify-end not-md:w-screen not-md:h-screen p-4 flex flex-col bg-neutral-900"
-  >
-    <p class="text-2xl font-bold">Melding</p>
-    <form class="flex flex-col gap-4">
-      <p>Email</p>
-      <Input bind:value={email} type="text" />
-      <p>Naam</p>
-      <Input bind:value={name} type="text" />
-      <p>Beschrijving</p>
-      <Input bind:value={description} class="h-30" type="area" />
-      <p>Foto</p>
-      {#if image}
-        <img src={URL.createObjectURL(image)} alt="preview" class="h-40" />
-      {/if}
-      <input
-        type="file"
-        accept="image/*"
-        onchange={(e) => {
-          const target = e.target as HTMLInputElement;
-          image = target.files?.[0] ?? null;
-          console.log("selected file:", image);
-        }}
-      />
-      <Button onclick={onSubmit}>Meld</Button>
-    </form>
-  </div>
-</Layout>
+  <div class="flex items-center justify-center h-full w-full">
+    <div
+      class="md:w-100 not-md:h-full not-md:justify-center md:rounded-xl w-full p-4 flex flex-col bg-ctp-crust"
+    >
+      <p class="text-2xl font-bold">Melding</p>
+      <form class="flex flex-col gap-4">
+        <p>Email</p>
+        <Input bind:value={email} type="text" />
+        <p>Naam</p>
+        <Input bind:value={name} type="text" />
+        <p>Beschrijving</p>
+        <Input bind:value={description} class="h-30" type="area" />
+        <p>Foto</p>
+        {#if image}
+          <img src={URL.createObjectURL(image)} alt="preview" class="h-40" />
+        {/if}
+        <input
+          type="file"
+          accept="image/*"
+          onchange={(e) => {
+            const target = e.target as HTMLInputElement;
+            image = target.files?.[0] ?? null;
+            console.log("selected file:", image);
+          }}
+        />
+        <Button onclick={onSubmit}>Meld</Button>
+      </form>
+    </div>
+  </div></Layout
+>
