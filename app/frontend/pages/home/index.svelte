@@ -3,7 +3,7 @@
 </script>
 
 <Layout>
-  <main class="min-h-screen w-full text-ctp-text">
+  <main class="h-full w-full text-ctp-text">
     <div class="p-6 max-w-5xl mx-auto">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center mb-8">
         <div
@@ -63,9 +63,7 @@
             class="text-4xl sm:text-5xl font-extrabold leading-tight mb-4"
             style="color: var(--catppuccin-color-text);"
           >
-            <span class="text-ctp-sapphire">Axis</span>Point —
-            <span style="color: var(--catppuccin-color-sapphire)">Los op</span> wat
-            opgelost moet worden.
+            <span class="text-ctp-sapphire">Axis</span>Point — Jij Rapoteerd, Wij Fixen.
           </h1>
           <p class="text-lg text-ctp-text/80 mb-4">
             AxisPoint vereenvoudigt het melden van lokale problemen, zodat
@@ -83,41 +81,6 @@
             >
               Meld een probleem
             </a>
-            <a
-              href="/routes"
-              class="inline-flex items-center gap-3 px-4 py-2 rounded-md text-sm font-medium shadow"
-              style="background: linear-gradient(180deg, var(--catppuccin-color-crust), var(--catppuccin-color-mantle)); color: var(--catppuccin-color-text);"
-            >
-              Bekijk dekking en routes
-            </a>
-          </div>
-
-          <div class="mt-6 grid grid-cols-3 gap-4 max-w-md">
-            <div
-              class="p-4 rounded-xl shadow-md"
-              style="background: linear-gradient(180deg, var(--catppuccin-color-crust), var(--catppuccin-color-mantle)); color: var(--catppuccin-color-text);"
-            >
-              <div class="text-2xl font-bold">97%</div>
-              <div class="text-sm text-ctp-text/80">
-                Gerapporteerde problemen opgelost
-              </div>
-            </div>
-            <div
-              class="p-4 rounded-xl shadow-md"
-              style="background: linear-gradient(180deg, var(--catppuccin-color-crust), var(--catppuccin-color-mantle)); color: var(--catppuccin-color-text);"
-            >
-              <div class="text-2xl font-bold">~1m</div>
-              <div class="text-sm text-ctp-text/80">
-                Gemiddelde routeringstijd
-              </div>
-            </div>
-            <div
-              class="p-4 rounded-xl shadow-md"
-              style="background: linear-gradient(180deg, var(--catppuccin-color-crust), var(--catppuccin-color-mantle)); color: var(--catppuccin-color-text);"
-            >
-              <div class="text-2xl font-bold">σ</div>
-              <div class="text-sm text-ctp-text/80">Sigma-nauwkeurigheid</div>
-            </div>
           </div>
         </div>
       </div>
