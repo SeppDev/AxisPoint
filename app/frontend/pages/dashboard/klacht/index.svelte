@@ -102,7 +102,6 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    background: linear-gradient(135deg, var(--catppuccin-color-blue, #6366f1) 0%, var(--catppuccin-color-mauve, #a855f7) 100%);
     border-radius: 1rem;
     backdrop-filter: blur(10px);
   }

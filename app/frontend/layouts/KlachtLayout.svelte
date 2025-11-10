@@ -142,8 +142,8 @@
     width: 100%;
     padding: 1rem;
     border-radius: 0.75rem;
-    background: linear-gradient(145deg, rgba(55, 65, 81, 0.9), rgba(31, 41, 55, 0.9));
-    border: 1px solid rgba(75, 85, 99, 0.3);
+    background: var(--catppuccin-color-mantle, #232634);
+    border: 1px solid var(--catppuccin-color-surface0, #45475a);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
     display: flex;
@@ -154,9 +154,9 @@
 
   .klacht-card:hover {
     transform: translateX(4px);
-    border-color: rgba(96, 165, 250, 0.5);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 0 20px rgba(96, 165, 250, 0.1);
-    background: linear-gradient(145deg, rgba(55, 65, 81, 1), rgba(31, 41, 55, 1));
+    border-color: var(--catppuccin-color-blue, #89b4fa);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 0 20px var(--catppuccin-color-blue, #89b4fa);
+    background: var(--catppuccin-color-base, #181825);
   }
 
   .klacht-header {
@@ -169,7 +169,7 @@
   .klacht-name {
     font-size: 1.125rem;
     font-weight: 700;
-    color: #f3f4f6;
+    color: var(--catppuccin-color-text, #cdd6f4);
     margin: 0;
     flex: 1;
     line-height: 1.3;
@@ -186,23 +186,23 @@
   }
 
   .status-open {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    color: #fff;
+    background: var(--catppuccin-color-red, #f38ba8);
+    color: var(--catppuccin-color-crust, #11111b);
   }
 
   .status-in_progress {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-    color: #fff;
+    background: var(--catppuccin-color-peach, #fab387);
+    color: var(--catppuccin-color-crust, #11111b);
   }
 
   .status-completed {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: #fff;
+    background: var(--catppuccin-color-green, #a6e3a1);
+    color: var(--catppuccin-color-crust, #11111b);
   }
 
   .klacht-description {
     font-size: 0.875rem;
-    color: #d1d5db;
+    color: var(--catppuccin-color-subtext0, #a6adc8);
     line-height: 1.5;
     margin: 0;
     display: -webkit-box;
@@ -216,9 +216,9 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.75rem;
-    color: #9ca3af;
+    color: var(--catppuccin-color-subtext1, #9399b2);
     padding-top: 0.25rem;
-    border-top: 1px solid rgba(75, 85, 99, 0.3);
+    border-top: 1px solid var(--catppuccin-color-surface0, #45475a);
   }
 
   .klacht-meta svg {
