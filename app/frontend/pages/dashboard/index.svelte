@@ -243,14 +243,13 @@
         </div>
       </div>
     </section>
-
     <section>
       <h2 class="text-xl font-semibold mb-3">Recente meldingen</h2>
       {#if recent && recent.length}
         <div class="grid gap-2">
           {#each recent as k}
             <a
-              class="p-3 rounded bg-ctp-mantle flex justify-between"
+              class="p-3 rounded-xl bg-ctp-mantle flex justify-between"
               href={`/dashboard/klacht/${k.id}`}
             >
               <div>

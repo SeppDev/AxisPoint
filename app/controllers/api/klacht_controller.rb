@@ -6,8 +6,6 @@ class Api::KlachtController < ApplicationController
   skip_before_action :authenticate, only: [:create]
   protect_from_forgery with: :null_session
 
-  protect_from_forgery with: :null_session
-
   def create
     klacht = Klacht.new(klacht_params)
 
@@ -49,6 +47,6 @@ class Api::KlachtController < ApplicationController
   private
 
   def klacht_params
-  params.require(:klacht).permit(:name, :description, :latitude, :longitude, :image, :status, :email)
+    params.require(:klacht).permit(:name, :description, :latitude, :longitude, :image, :status, :email)
   end
 end
