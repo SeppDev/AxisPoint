@@ -31,7 +31,6 @@
       }
 
       const payload = await res.json();
-      // update local klacht with returned attributes if present
       if (payload.klacht && payload.klacht.status) {
         klacht.status = payload.klacht.status;
       }
@@ -47,7 +46,6 @@
 
 <KlachtLayout {initialView} klachten={[klacht]}>
   <div class="relative max-w-3xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-
     <div
       class="relative z-10 bg-ctp-crust backdrop-blur-sm rounded-xl p-4 sm:p-6 shadow-lg h-full"
     >
@@ -58,7 +56,6 @@
           class="w-full object-cover h-48 sm:h-72 md:h-96 rounded-md mb-4"
         />
       {/if}
-
 
       <h1 class="text-2xl sm:text-3xl md:text-3xl font-extrabold mb-3">
         {klacht?.name}
@@ -84,8 +81,8 @@
             class="sm:w-auto block px-3 py-2 rounded bg-neutral-800 text-sm"
           >
             <option value="open">Open</option>
-            <option value="in_progress">In progress</option>
-            <option value="completed">Completed</option>
+            <option value="in_progress">In behandeling</option>
+            <option value="completed">Compleet</option>
           </select>
         </div>
 

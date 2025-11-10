@@ -70,7 +70,7 @@
     const config: any = {
       type: "doughnut",
       data: {
-        labels: ["Open", "In progress", "Completed"],
+        labels: ["Open", "In behandeling", "Compleet"],
         datasets: [
           {
             data: [stats.open, stats.in_progress, stats.completed],
@@ -207,7 +207,7 @@
               class="text-sm font-bold"
               style="color: var(--catppuccin-color-peach);"
             >
-              In Progress
+              In behandeling
             </div>
             <div class="text-2xl font-bold">
               {Math.round(inProgVal.current)}
@@ -218,7 +218,7 @@
               class="text-sm font-bold"
               style="color: var(--catppuccin-color-green);"
             >
-              Completed
+              Compleet
             </div>
             <div class="text-2xl font-bold">
               {Math.round(completedVal.current)}
@@ -245,7 +245,7 @@
     </div>
 
     <section>
-      <h2 class="text-xl font-semibold mb-3">Recent complaints</h2>
+      <h2 class="text-xl font-semibold mb-3">Recente meldingen</h2>
       {#if recent && recent.length}
         <div class="grid gap-2">
           {#each recent as k}
@@ -259,14 +259,16 @@
                   {new Date(k.created_at).toLocaleString()}
                 </div>
               </div>
-              <div class="text-sm px-3 py-1 rounded bg-ctp-crust">
+              <div
+                class="text-sm px-3 py-1 rounded bg-ctp-crust flex justify-center items-center"
+              >
                 {k.status}
               </div>
             </a>
           {/each}
         </div>
       {:else}
-        <p class="text-sm text-gray-400">No recent complaints.</p>
+        <p class="text-sm text-gray-400">Geen recente meldingen.</p>
       {/if}
     </section>
   </div>
