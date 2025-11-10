@@ -2,11 +2,8 @@
 
 class Api::KlachtController < ApplicationController
   before_action :authenticate, only: [:index, :destroy]
-
-  skip_before_action :authenticate, only: [:create]
-  protect_from_forgery with: :null_session
-
-  protect_from_forgery with: :null_session
+  skip_before_action :authenticate, only: [:create, :update]
+  skip_before_action :verify_authenticity_token, only: [:create, :update]
 
   def create
     klacht = Klacht.new(klacht_params)
@@ -16,7 +13,7 @@ class Api::KlachtController < ApplicationController
     if klacht.save
       render json: { status: 'success' }
     else
-      render json: { errors: post.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: klacht.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -49,6 +46,6 @@ class Api::KlachtController < ApplicationController
   private
 
   def klacht_params
-  params.require(:klacht).permit(:name, :description, :latitude, :longitude, :image, :status, :email)
+  params.require(:klacht).permit(:name, :description, :latitude, :longitude, :image, :status, :contact_email)
   end
 end

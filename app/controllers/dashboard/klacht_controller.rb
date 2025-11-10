@@ -9,7 +9,7 @@ class Dashboard::KlachtController < InertiaController
     klachten = Klacht.all
 
     render inertia: {
-      klachten: klachten.as_json(only: %i[id name description latitude longitude created_at updated_at status])
+      klachten: klachten.as_json(only: %i[id name description latitude longitude created_at updated_at status contact_email])
     }
   end
 
@@ -17,7 +17,7 @@ class Dashboard::KlachtController < InertiaController
     klacht = Klacht.find_by!(id: params[:slug])
 
     render inertia: {
-      klacht: klacht.as_json(only: %i[id name description latitude longitude created_at updated_at status]),
+      klacht: klacht.as_json(only: %i[id name description latitude longitude created_at updated_at status contact_email]),
       image_url: klacht.image.attached? ? url_for(klacht.image) : nil
     }
   rescue ActiveRecord::RecordNotFound

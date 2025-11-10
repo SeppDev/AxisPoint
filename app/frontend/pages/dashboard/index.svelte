@@ -247,22 +247,27 @@
     <section>
       <h2 class="text-xl font-semibold mb-3">Recente meldingen</h2>
       {#if recent && recent.length}
-        <div class="grid gap-2">
+        <div class="klachten-list-dashboard">
           {#each recent as k}
             <a
-              class="p-3 rounded bg-ctp-mantle flex justify-between"
+              class="klacht-card-dashboard"
               href={`/dashboard/klacht/${k.id}`}
             >
-              <div>
-                <div class="font-semibold">{k.name}</div>
-                <div class="text-sm text-ctp-text">
-                  {new Date(k.created_at).toLocaleString()}
+              <div class="klacht-card-row-dashboard">
+                <div class="klacht-card-in-dashboard w-full">
+                  <div class="klacht-header-dashboard w-full">
+                    <span class="klacht-name-dashboard">{k.name}</span>
+                    <span class="status-badge-dashboard status-{k.status || 'open'}">
+                      {k.status === 'in_progress' ? 'In Behandeling' : k.status === 'completed' ? 'Afgerond' : 'Open'}
+                    </span>
+                  </div>
+                  <div class="klacht-meta-dashboard">
+                    <span class="meta-item-dashboard">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7V3m8 4V3M3 11h18M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"/></svg>
+                      <span>{new Date(k.created_at).toLocaleDateString('nl-NL')}</span>
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div
-                class="text-sm px-3 py-1 rounded bg-ctp-crust flex justify-center items-center"
-              >
-                {k.status}
               </div>
             </a>
           {/each}
@@ -273,3 +278,102 @@
     </section>
   </div>
 </Layout>
+
+<style>
+.klachten-list-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+.klacht-card-dashboard {
+  width: 100%;
+  padding: 1.1rem 1.3rem;
+  border-radius: 1rem;
+  background: var(--catppuccin-color-mantle, #232634);
+  border: 1.5px solid var(--catppuccin-color-surface0, #45475a);
+  transition: box-shadow 0.2s, border-color 0.2s, background 0.2s;
+  text-decoration: none;
+  display: block;
+  box-shadow: 0 2px 8px 0 rgba(30, 32, 48, 0.08);
+  position: relative;
+}
+.klacht-card-dashboard:hover {
+  border-color: var(--catppuccin-color-blue, #89b4fa);
+  background: var(--catppuccin-color-base, #181825);
+  box-shadow: 0 8px 24px 0 rgba(137, 180, 250, 0.10);
+  z-index: 2;
+}
+.klacht-card-row-dashboard {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0;
+}
+.klacht-card-main-dashboard {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+.klacht-header-dashboard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.1rem;
+}
+.klacht-name-dashboard {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--catppuccin-color-text, #cdd6f4);
+  margin: 0;
+  flex: 1;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.status-badge-dashboard {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.8rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  text-transform: capitalize;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+.status-badge-dashboard.status-open {
+  background: var(--catppuccin-color-red, #f38ba8);
+  color: var(--catppuccin-color-crust, #11111b);
+}
+.status-badge-dashboard.status-in_progress {
+  background: var(--catppuccin-color-peach, #fab387);
+  color: var(--catppuccin-color-crust, #11111b);
+}
+.status-badge-dashboard.status-completed {
+  background: var(--catppuccin-color-green, #a6e3a1);
+  color: var(--catppuccin-color-crust, #11111b);
+}
+.klacht-meta-dashboard {
+  display: flex;
+  flex-direction: row;
+  gap: 1.1rem;
+  font-size: 0.85rem;
+  color: var(--catppuccin-color-subtext1, #9399b2);
+  margin-top: 0.1rem;
+  align-items: center;
+}
+.meta-item-dashboard {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+</style>
