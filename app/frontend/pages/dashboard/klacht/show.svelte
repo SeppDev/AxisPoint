@@ -42,6 +42,8 @@
   let { klacht, image_url }: { klacht: Klacht; image_url?: string } = $props();
 
   const initialView = [klacht.latitude, klacht.longitude];
+
+  let showImageModal = $state(false);
 </script>
 
 <KlachtLayout {initialView} klachten={[klacht]}>
@@ -57,8 +59,18 @@
         <img
           src={image_url}
           alt={klacht?.name}
-          class="klacht-image"
+          class="klacht-image clickable"
+          onclick={() => showImageModal = true}
+          title="Klik om te vergroten"
         />
+        {#if showImageModal}
+          <div class="modal-overlay" onclick={() => showImageModal = false}>
+            <div class="modal-content" >
+              <img src={image_url} alt={klacht?.name} class="modal-image" />
+              <button class="modal-close" onclick={() => showImageModal = false} title="Sluiten">&times;</button>
+            </div>
+          </div>
+        {/if}
       {/if}
 
       <div class="header-row">
@@ -101,7 +113,7 @@
       {/if}
 
       <div class="status-section">
-        <label class="label">Status Wijzigen</label>
+        <p class="label">Status Wijzigen</p>
         <select
           bind:value={klacht.status}
           onchange={onStatusChange}
@@ -151,6 +163,14 @@
     object-fit: cover;
     border-radius: 0.5rem;
     margin-bottom: 0.5rem;
+  }
+
+  .clickable {
+    cursor: zoom-in;
+    transition: box-shadow 0.2s;
+  }
+  .clickable:hover {
+    box-shadow: 0 4px 24px rgba(137,180,250,0.18);
   }
 
   .header-row {
@@ -367,6 +387,57 @@
   background: var(--catppuccin-color-blue, #89b4fa);
   color: var(--catppuccin-color-base, #181825);
   border-color: var(--catppuccin-color-blue, #89b4fa);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  position: relative;
+  background: var(--catppuccin-color-base, #181825);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(30,32,48,0.25);
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-image {
+  max-width: 80vw;
+  max-height: 70vh;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 12px rgba(137,180,250,0.18);
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.9rem;
+  background: none;
+  border: none;
+  color: var(--catppuccin-color-text, #cdd6f4);
+  font-size: 2.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: color 0.2s;
+}
+.modal-close:hover {
+  color: var(--catppuccin-color-red, #f38ba8);
 }
 </style>
 
