@@ -10,7 +10,7 @@
     created_at: string;
     updated_at: string;
     status?: string;
-    email?: string;
+    contact_email?: string;
   }
 
   async function onStatusChange(e: Event) {
@@ -62,10 +62,28 @@
         </span>
       </div>
 
-      {#if klacht?.email}
-        <div class="email-section">
-          <span class="label">Email:</span>
-          <span class="value">{klacht.email}</span>
+      {#if klacht?.contact_email}
+        <div class="email-section-wrapper">
+          <span class="label">Contact Email</span>
+          <div class="email-card">
+            <div class="email-info">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="email-icon">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <span class="email-address">{klacht.contact_email}</span>
+            </div>
+            <a 
+              href="mailto:{klacht.contact_email}?subject=Re: {encodeURIComponent(klacht.name)}&body=Beste melder,%0D%0A%0D%0ABetreft uw melding: {encodeURIComponent(klacht.name)}%0D%0A%0D%0A" 
+              class="email-button"
+              title="Email verzenden naar melder"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+              Email Verzenden
+            </a>
+          </div>
         </div>
       {/if}
 
@@ -189,6 +207,81 @@
   .value {
     font-size: 0.9375rem;
     color: var(--catppuccin-color-text);
+  }
+
+  .email-section-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .email-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--catppuccin-color-base, #181825);
+    border: 1px solid var(--catppuccin-color-surface0, #45475a);
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+  }
+
+  .email-card:hover {
+    border-color: var(--catppuccin-color-blue, #89b4fa);
+    box-shadow: 0 4px 12px rgba(137, 180, 250, 0.1);
+  }
+
+  .email-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .email-icon {
+    flex-shrink: 0;
+    color: var(--catppuccin-color-blue, #89b4fa);
+  }
+
+  .email-address {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--catppuccin-color-text, #cdd6f4);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .email-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.125rem;
+    background: var(--catppuccin-color-blue, #89b4fa);
+    color: var(--catppuccin-color-crust, #11111b);
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(137, 180, 250, 0.2);
+    white-space: nowrap;
+  }
+
+  .email-button:hover {
+    background: var(--catppuccin-color-sapphire, #74c7ec);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(137, 180, 250, 0.3);
+  }
+
+  .email-button:active {
+    transform: translateY(0);
+  }
+
+  .email-button svg {
+    flex-shrink: 0;
   }
 
   .description {

@@ -2,8 +2,8 @@
 
 class Api::KlachtController < ApplicationController
   before_action :authenticate, only: [:index, :destroy]
-  skip_before_action :authenticate, only: [:create]
-  skip_before_action :verify_authenticity_token, only: [:create]
+  skip_before_action :authenticate, only: [:create, :update]
+  skip_before_action :verify_authenticity_token, only: [:create, :update]
 
   def create
     klacht = Klacht.new(klacht_params)
