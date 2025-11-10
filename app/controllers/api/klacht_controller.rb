@@ -20,6 +20,17 @@ class Api::KlachtController < ApplicationController
     end
   end
 
+  def update
+    klacht = Klacht.find_by(id: params[:id])
+    return render json: { status: 'error' }, status: :not_found unless klacht
+
+    if klacht.update(klacht_params)
+      render json: { status: 'success' }
+    else
+      render json: { errors: klacht.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
   def destroy
     klacht = Klacht.find_by(id: params[:id])
     if klacht
@@ -38,6 +49,6 @@ class Api::KlachtController < ApplicationController
   private
 
   def klacht_params
-    params.require(:klacht).permit(:name, :description, :latitude, :longitude, :image)
+  params.require(:klacht).permit(:name, :description, :latitude, :longitude, :image, :status, :email)
   end
 end

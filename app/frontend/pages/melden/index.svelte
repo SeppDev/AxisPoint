@@ -39,10 +39,15 @@
       openDialog("Vul een beschrijving in");
       return;
     }
+    if (!image) {
+      openDialog("upload een plaatje");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("klacht[name]", name);
     formData.append("klacht[description]", description);
+    formData.append("klacht[email]", email);
     formData.append("klacht[longitude]", position.coords.longitude.toString());
     formData.append("klacht[latitude]", position.coords.latitude.toString());
 
@@ -58,8 +63,9 @@
     openDialog("Melding gestuurd");
   }
 
-  function errorCallback() {
-    openDialog("Locatie opvragen mislukt");
+  function errorCallback(err: any) {
+    openDialog("kon locatie niet opnemen!");
+    console.log(err);
   }
 
   function onSubmit(event: Event) {
@@ -110,5 +116,5 @@
         <Button onclick={onSubmit}>Meld</Button>
       </form>
     </div>
-  </div></Layout
->
+  </div>
+</Layout>

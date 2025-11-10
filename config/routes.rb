@@ -29,10 +29,12 @@ Rails.application.routes.draw do
   
   get :sigma, to: "sigma#index"
   get :melden, to: "melden#index"
-  get "/dashboard/klacht/:slug", to: "dashboard/klacht#show", as: :info
+  
+  get "/dashboard/klacht/:slug", to: "dashboard/klacht#show", as: :klachtpage
+  get "/dashboard/klacht", to: "dashboard/klacht#index", as: :klachten
 
   namespace :api do
-    resources :klacht, only: [:create, :index, :destroy]
+    resources :klacht, only: [:create, :index, :destroy, :update]
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
