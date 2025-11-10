@@ -2,10 +2,8 @@
 
 Rails.application.routes.draw do
   
-  get  "sign_in", to: "sessions#new", as: :sign_in
-  post "sign_in", to: "sessions#create"
-  get  "sign_up", to: "users#new", as: :sign_up
-  post "sign_up", to: "users#create"
+  get  "login", to: "sessions#new", as: :sign_in
+  post "login", to: "sessions#create"
 
   resources :sessions, only: [:destroy]
   resource :users, only: [:destroy]
@@ -16,6 +14,7 @@ Rails.application.routes.draw do
   end
 
   get :dashboard, to: "dashboard#index"
+  get :users, to: "users#index"
   
   namespace :settings do
     resource :profile, only: [:show, :update]

@@ -19,7 +19,9 @@
     <a href="/" class="flex items-center gap-2">
       <!-- animated sigma, tilted to the side -->
       <AnimatedSigma size={36} tilt={0} className="text-ctp-text" />
-      <span class="text-lg font-extrabold text-ctp-text"><span class=" text-ctp-sapphire">Axis</span>Point</span>
+      <span class="text-lg font-extrabold text-ctp-text"
+        ><span class=" text-ctp-sapphire">Axis</span>Point</span
+      >
     </a>
   </div>
   <nav class="flex items-center gap-4 pr-4">
@@ -27,6 +29,7 @@
     <a href="/melden">melden</a>
     {#if authUser}
       <a href="/dashboard">dashboard</a>
+      <a href="/users">gebruikers</a>
     {:else}
       <a href="/login">login</a>
     {/if}
