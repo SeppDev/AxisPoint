@@ -102,7 +102,7 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.05) 100%);
+    background: linear-gradient(135deg, var(--catppuccin-color-blue, #6366f1) 0%, var(--catppuccin-color-mauve, #a855f7) 100%);
     border-radius: 1rem;
     backdrop-filter: blur(10px);
   }
@@ -114,14 +114,14 @@
   }
 
   .stat-card {
-    background: linear-gradient(145deg, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.8));
+    background: linear-gradient(145deg, var(--catppuccin-color-mantle, #1f2937) 80%, var(--catppuccin-color-base, #111827) 100%);
     border-radius: 0.75rem;
     padding: 1rem;
     display: flex;
     align-items: center;
     gap: 0.75rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(107, 114, 128, 0.2);
+    border: 1px solid var(--catppuccin-color-surface0, #6b7280);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     cursor: pointer;
     width: 100%;
@@ -131,29 +131,29 @@
   .stat-card:hover {
     transform: translateY(-4px) scale(1.02);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    border-color: rgba(147, 197, 253, 0.5);
+    border-color: var(--catppuccin-color-blue, #93c5fd);
   }
 
   .stat-card.active {
-    border: 2px solid rgba(96, 165, 250, 0.8);
-    box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+    border: 2px solid var(--catppuccin-color-blue, #60a5fa);
+    box-shadow: 0 0 20px var(--catppuccin-color-blue, #60a5fa);
     transform: scale(1.05);
   }
 
   .stat-total:hover {
-    border-color: rgba(96, 165, 250, 0.6);
+    border-color: var(--catppuccin-color-blue, #60a5fa);
   }
 
   .stat-open:hover {
-    border-color: rgba(248, 113, 113, 0.6);
+    border-color: var(--catppuccin-color-red, #f87171);
   }
 
   .stat-progress:hover {
-    border-color: rgba(251, 191, 36, 0.6);
+    border-color: var(--catppuccin-color-peach, #fbbf24);
   }
 
   .stat-completed:hover {
-    border-color: rgba(74, 222, 128, 0.6);
+    border-color: var(--catppuccin-color-green, #4ade80);
   }
 
   .stat-icon {
@@ -173,13 +173,13 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: rgba(156, 163, 175, 1);
+    color: var(--catppuccin-color-subtext1, #9ca3af);
   }
 
   .stat-value {
     font-size: 1.875rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+    background: linear-gradient(135deg, var(--catppuccin-color-blue, #60a5fa) 0%, var(--catppuccin-color-mauve, #a78bfa) 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -187,10 +187,10 @@
   }
 
   .progress-section {
-    background: rgba(31, 41, 55, 0.6);
+    background: var(--catppuccin-color-mantle, #1f2937);
     border-radius: 0.75rem;
     padding: 1rem;
-    border: 1px solid rgba(107, 114, 128, 0.2);
+    border: 1px solid var(--catppuccin-color-surface0, #6b7280);
   }
 
   .progress-header {
@@ -205,13 +205,13 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: rgba(209, 213, 219, 1);
+    color: var(--catppuccin-color-subtext1, #d1d5db);
   }
 
   .progress-percentage {
     font-size: 1.25rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+    background: linear-gradient(135deg, var(--catppuccin-color-green, #34d399) 0%, var(--catppuccin-color-teal, #10b981) 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -219,18 +219,18 @@
 
   .progress-bar {
     height: 1.25rem;
-    background: rgba(17, 24, 39, 0.8);
+    background: var(--catppuccin-color-base, #111827);
     border-radius: 9999px;
     overflow: hidden;
-    border: 1px solid rgba(107, 114, 128, 0.3);
+    border: 1px solid var(--catppuccin-color-surface0, #6b7280);
   }
 
   .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
+    background: linear-gradient(90deg, var(--catppuccin-color-teal, #10b981) 0%, var(--catppuccin-color-green, #34d399) 50%, var(--catppuccin-color-mint, #6ee7b7) 100%);
     border-radius: 9999px;
     transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 20px var(--catppuccin-color-teal, #10b981);
     animation: shimmer 2s infinite;
   }
 

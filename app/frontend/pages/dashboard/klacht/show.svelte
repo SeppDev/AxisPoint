@@ -111,13 +111,13 @@
   }
 
   .detail-card {
-    background: #1f2937;
+    background: var(--catppuccin-color-mantle);
     border-radius: 0.75rem;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-    border: 1px solid #374151;
+    border: 1px solid var(--catppuccin-color-surface0);
   }
 
   .klacht-image {
@@ -135,13 +135,13 @@
     align-items: center;
     gap: 1rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #374151;
+    border-bottom: 1px solid var(--catppuccin-color-surface0);
   }
 
   .klacht-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #f3f4f6;
+    color: var(--catppuccin-color-text);
     margin: 0;
     flex: 1;
   }
@@ -156,18 +156,18 @@
   }
 
   .status-open {
-    background: #ef4444;
-    color: #fff;
+    background: var(--catppuccin-color-red);
+    color: var(--catppuccin-color-crust);
   }
 
   .status-in_progress {
-    background: #f59e0b;
-    color: #fff;
+    background: var(--catppuccin-color-peach);
+    color: var(--catppuccin-color-crust);
   }
 
   .status-completed {
-    background: #10b981;
-    color: #fff;
+    background: var(--catppuccin-color-green);
+    color: var(--catppuccin-color-crust);
   }
 
   .email-section,
@@ -181,27 +181,27 @@
   .label {
     font-size: 0.875rem;
     font-weight: 600;
-    color: #9ca3af;
+    color: var(--catppuccin-color-subtext1);
     text-transform: uppercase;
     letter-spacing: 0.025em;
   }
 
   .value {
     font-size: 0.9375rem;
-    color: #e5e7eb;
+    color: var(--catppuccin-color-text);
   }
 
   .description {
     font-size: 0.9375rem;
     line-height: 1.6;
-    color: #d1d5db;
+    color: var(--catppuccin-color-subtext0);
     margin: 0;
   }
 
   .status-select {
-    background: #111827;
-    border: 1px solid #374151;
-    color: #fff;
+    background: var(--catppuccin-color-base);
+    border: 1px solid var(--catppuccin-color-surface0);
+    color: var(--catppuccin-color-text);
     padding: 0.625rem 0.875rem;
     border-radius: 0.5rem;
     font-size: 0.9375rem;
@@ -210,24 +210,24 @@
   }
 
   .status-select:hover {
-    border-color: #4b5563;
+    border-color: var(--catppuccin-color-blue);
   }
 
   .status-select:focus {
     outline: none;
-    border-color: #60a5fa;
+    border-color: var(--catppuccin-color-blue);
   }
 
   .status-select option {
-    background: #111827;
-    color: #fff;
+    background: var(--catppuccin-color-base);
+    color: var(--catppuccin-color-text);
   }
 
   .timestamps {
     display: flex;
     gap: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid #374151;
+    border-top: 1px solid var(--catppuccin-color-surface0);
   }
 
   .timestamp-item {
