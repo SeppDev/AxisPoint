@@ -88,9 +88,9 @@
     </Dialog.Portal>
   </Dialog.Root>
 
-  <div class="flex items-center justify-center min-h-screen w-screen">
+  <div class="flex items-center justify-center h-full w-full">
     <div
-      class="md:w-100 md:rounded-xl not-md:justify-end not-md:w-screen not-md:h-screen p-4 flex flex-col bg-neutral-900"
+      class="md:w-100 not-md:h-full not-md:justify-center md:rounded-xl w-full p-4 flex flex-col bg-ctp-crust"
     >
       <p class="text-2xl font-bold">Melding</p>
       <form class="flex flex-col gap-4">
