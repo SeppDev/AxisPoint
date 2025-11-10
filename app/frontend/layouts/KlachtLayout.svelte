@@ -7,24 +7,29 @@
     klachten,
     initialView,
     showTabs = false,
-  }: { children: any; klachten: any[]; initialView: any[]; showTabs?: boolean } = $props();
+  }: {
+    children: any;
+    klachten: any[];
+    initialView: any[];
+    showTabs?: boolean;
+  } = $props();
 
   // selectedStatus: 'all' | 'open' | 'in_progress' | 'completed'
-  let selectedStatus: string = $state('all');
+  let selectedStatus: string = $state("all");
 
   let map: Map;
   let markers: any[] = [];
   function createMap(container: HTMLElement) {
     let m = L.map(container, { preferCanvas: true }).setView(
       initialView as any,
-      13
+      13,
     );
     L.tileLayer(
       "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
       {
         attribution: `&copy;<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>`,
         // maxZoom: 0,
-      }
+      },
     ).addTo(m);
 
     return m;
@@ -45,7 +50,9 @@
       const marker = new L.Marker([klacht.latitude, klacht.longitude], {
         title: klacht.name,
       }).addTo(map);
-      marker.bindPopup(`<a href=\"/dashboard/klacht/${klacht.id}\">${klacht.name}</a><div class=\"text-sm text-gray-400\">Status: ${klacht.status ?? 'unknown'}</div>`);
+      marker.bindPopup(
+        `<a href=\"/dashboard/klacht/${klacht.id}\">${klacht.name}</a><div class=\"text-sm text-gray-400\">Status: ${klacht.status ?? "unknown"}</div>`,
+      );
       markers.push(marker);
     }
   }
@@ -69,17 +76,11 @@
 
   // react to status changes and refresh markers
   $effect(() => {
-  if (map) {
+    if (map) {
       refreshMarkers();
-  }
-  }) 
+    }
+  });
 </script>
-
-<style>
-  .klacht-tabs { display: flex; gap: 0.5rem; margin: 0.5rem; }
-  .klacht-tab { padding: 0.35rem 0.6rem; border-radius: 6px; cursor: pointer; }
-  .klacht-tab.active { background: #374151; color: white; }
-</style>
 
 <svelte:window on:resize={resizeMap} />
 <link
@@ -93,21 +94,41 @@
   <div class="flex flex-row flex-grow h-full w-full overflow-none">
     <div class="grow h-full">
       {#if showTabs}
-        <div class="klacht-tabs" >
-          <button class="klacht-tab {selectedStatus === 'all' ? 'active' : ''}" onclick={() => (selectedStatus = 'all')}>All</button>
-          <button class="klacht-tab {selectedStatus === 'open' ? 'active' : ''}" onclick={() => (selectedStatus = 'open')}>Open</button>
-          <button class="klacht-tab {selectedStatus === 'in_progress' ? 'active' : ''}" onclick={() => (selectedStatus = 'in_progress')}>In progress</button>
-          <button class="klacht-tab {selectedStatus === 'completed' ? 'active' : ''}" onclick={() => (selectedStatus = 'completed')}>Completed</button>
+        <div class="klacht-tabs">
+          <button
+            class="klacht-tab {selectedStatus === 'all' ? 'active' : ''}"
+            onclick={() => (selectedStatus = "all")}>All</button
+          >
+          <button
+            class="klacht-tab {selectedStatus === 'open' ? 'active' : ''}"
+            onclick={() => (selectedStatus = "open")}>Open</button
+          >
+          <button
+            class="klacht-tab {selectedStatus === 'in_progress'
+              ? 'active'
+              : ''}"
+            onclick={() => (selectedStatus = "in_progress")}
+            >In behandeling</button
+          >
+          <button
+            class="klacht-tab {selectedStatus === 'completed' ? 'active' : ''}"
+            onclick={() => (selectedStatus = "completed")}>Compleet</button
+          >
         </div>
       {/if}
       <div class="h-full" use:mapAction></div>
     </div>
     <div
-      class="p-4 w-120  flex-col max-h-full overflow-x-none overflow-y-auto items-center gap-2 {showTabs ? "hidden md:flex" : "flex"}"
+      class="p-4 w-120 flex-col max-h-full overflow-x-none overflow-y-auto items-center gap-2 {showTabs
+        ? 'hidden md:flex'
+        : 'flex'}"
     >
       {#if showTabs}
-        {#each klachten.filter(k => selectedStatus === 'all' || k.status === selectedStatus) as klacht}
-          <a class="w-full p-4 rounded-xl bg-neutral-700" href={`/dashboard/klacht/${klacht.id}`}>
+        {#each klachten.filter((k) => selectedStatus === "all" || k.status === selectedStatus) as klacht}
+          <a
+            class="w-full p-4 rounded-xl bg-neutral-700"
+            href={`/dashboard/klacht/${klacht.id}`}
+          >
             <p class="text-xl">{klacht.name}</p>
             <p class="">{klacht.description}</p>
           </a>
@@ -118,3 +139,20 @@
     </div>
   </div>
 </Layout>
+
+<style>
+  .klacht-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0.5rem;
+  }
+  .klacht-tab {
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .klacht-tab.active {
+    background: #374151;
+    color: white;
+  }
+</style>
