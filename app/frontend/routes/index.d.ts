@@ -574,16 +574,6 @@ export const signInPath: ((
 
 /**
  * Generates rails route to
- * /sign_up(.:format)
- * @param {object | undefined} options
- * @returns {string} route path
- */
-export const signUpPath: ((
-  options?: {format?: OptionalRouteParameter} & RouteOptions
-) => string) & RouteHelperExtras;
-
-/**
- * Generates rails route to
  * /rails/active_storage/disk/:encoded_token(.:format)
  * @param {any} encodedToken
  * @param {object | undefined} options

@@ -925,14 +925,6 @@ export const signInPath = /*#__PURE__*/ __jsr.r({"format":{}}, [2,[7,"/"],[2,[6,
 
 /**
  * Generates rails route to
- * /sign_up(.:format)
- * @param {object | undefined} options
- * @returns {string} route path
- */
-export const signUpPath = /*#__PURE__*/ __jsr.r({"format":{}}, [2,[7,"/"],[2,[6,"sign_up"],[1,[2,[8,"."],[3,"format"]]]]]);
-
-/**
- * Generates rails route to
  * /rails/active_storage/disk/:encoded_token(.:format)
  * @param {any} encodedToken
  * @param {object | undefined} options

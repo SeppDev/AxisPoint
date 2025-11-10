@@ -9,11 +9,7 @@
   import { Input } from "@/components/ui/input";
   import { Label } from "@/components/ui/label";
   import AuthBase from "@/layouts/auth-layout.svelte";
-  import {
-    newIdentityPasswordResetPath,
-    signInPath,
-    signUpPath,
-  } from "@/routes";
+  import { newIdentityPasswordResetPath } from "@/routes";
 </script>
 
 <svelte:head>
@@ -24,12 +20,7 @@
   title="Log in to your account"
   description="Enter your email and password below to log in"
 >
-  <Form
-    method="post"
-    action={signInPath()}
-    resetOnSuccess={["password"]}
-    class="flex flex-col gap-6"
-  >
+  <Form method="post" resetOnSuccess={["password"]} class="flex flex-col gap-6">
     {#snippet children({ processing, errors }: FormComponentSlotProps)}
       <div class="grid gap-6">
         <div class="grid gap-2">

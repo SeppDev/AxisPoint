@@ -34,6 +34,7 @@
     <a href="/melden">melden</a>
     {#if authUser}
       <a href="/dashboard">dashboard</a>
+      <a href="/users">gebruikers</a>
       <Link
         class="cursor-pointer"
         onclick={handleLogout}

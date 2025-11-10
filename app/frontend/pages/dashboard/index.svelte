@@ -163,10 +163,10 @@
 </script>
 
 <Layout>
-  <div class="p-6 max-w-5xl mx-auto">
+  <div class="p-6 max-w-5xl mx-auto flex flex-col gap-4">
     <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 items-start">
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 items-start">
       <div
         class="col-span-2 p-6 rounded-3xl shadow-2xl h-96 flex items-center justify-center"
         style="background: linear-gradient(135deg, var(--catppuccin-color-mantle), var(--catppuccin-color-crust)); color: var(--catppuccin-color-text);"
@@ -242,7 +242,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <section>
       <h2 class="text-xl font-semibold mb-3">Recente meldingen</h2>

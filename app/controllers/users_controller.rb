@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 class UsersController < InertiaController
-  skip_before_action :authenticate, only: %i[new create]
-  before_action :require_no_authentication, only: %i[new create]
+  # skip_before_action :authenticate, only: %i[new create]
+  # before_action :require_no_authentication, only: %i[new create]
+   
+  def index
+  end
 
   def new
     @user = User.new
@@ -12,13 +15,15 @@ class UsersController < InertiaController
     @user = User.new(user_params)
 
     if @user.save
-      session_record = @user.sessions.create!
-      cookies.signed.permanent[:session_token] = {value: session_record.id, httponly: true}
+      # session_record = @user.sessions.create!
+      # cookies.signed.permanent[:session_token] = {value: session_record.id, httponly: true}
 
-      send_email_verification
-      redirect_to dashboard_path, notice: "Welcome! You have signed up successfully"
+      # send_email_verification
+      # redirect_to dashboard_path, notice: "Welcome! You have signed up successfully"
+      render json: { status: 'success' }
     else
-      redirect_to sign_up_path, inertia: inertia_errors(@user)
+      render json: { status: "failed" }, status: :unprocessable_entity
+      # redirect_to sign_up_path, inertia: inertia_errors(@user)
     end
   end
 
