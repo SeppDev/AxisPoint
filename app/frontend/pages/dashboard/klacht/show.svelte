@@ -45,6 +45,12 @@
 </script>
 
 <KlachtLayout {initialView} klachten={[klacht]}>
+  <div class="back-btn-row">
+    <a href="/dashboard/klacht" class="back-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:0.5em;"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      Terug naar kaart
+    </a>
+  </div>
   <div class="klacht-detail">
     <div class="detail-card">
       {#if image_url}
@@ -340,4 +346,27 @@
       flex-direction: column;
     }
   }
+.back-btn-row {
+  margin-bottom: 1.25rem;
+}
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  background: var(--catppuccin-color-base, #181825);
+  color: var(--catppuccin-color-blue, #89b4fa);
+  border: 1px solid var(--catppuccin-color-blue, #89b4fa);
+  border-radius: 0.5em;
+  padding: 0.5em 1.1em;
+  font-size: 1em;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.back-btn:hover {
+  background: var(--catppuccin-color-blue, #89b4fa);
+  color: var(--catppuccin-color-base, #181825);
+  border-color: var(--catppuccin-color-blue, #89b4fa);
+}
 </style>
+
