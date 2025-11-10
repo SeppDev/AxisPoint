@@ -254,8 +254,8 @@
               href={`/dashboard/klacht/${k.id}`}
             >
               <div class="klacht-card-row-dashboard">
-                <div class="klacht-card-in-dashboard">
-                  <div class="klacht-header-dashboard">
+                <div class="klacht-card-in-dashboard w-full">
+                  <div class="klacht-header-dashboard w-full">
                     <span class="klacht-name-dashboard">{k.name}</span>
                     <span class="status-badge-dashboard status-{k.status || 'open'}">
                       {k.status === 'in_progress' ? 'In Behandeling' : k.status === 'completed' ? 'Afgerond' : 'Open'}
