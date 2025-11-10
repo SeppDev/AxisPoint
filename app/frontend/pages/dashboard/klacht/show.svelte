@@ -45,58 +45,206 @@
 </script>
 
 <KlachtLayout {initialView} klachten={[klacht]}>
-  <div class="relative max-w-3xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-    <div
-      class="relative z-10 bg-ctp-crust backdrop-blur-sm rounded-xl p-4 sm:p-6 shadow-lg h-full"
-    >
+  <div class="klacht-detail">
+    <div class="detail-card">
       {#if image_url}
         <img
           src={image_url}
           alt={klacht?.name}
-          class="w-full object-cover h-48 sm:h-72 md:h-96 rounded-md mb-4"
+          class="klacht-image"
         />
       {/if}
 
-      <h1 class="text-2xl sm:text-3xl md:text-3xl font-extrabold mb-3">
-        {klacht?.name}
-      </h1>
+      <div class="header-row">
+        <h1 class="klacht-title">{klacht?.name}</h1>
+        <span class="status-badge status-{klacht.status || 'open'}">
+          {klacht.status === 'in_progress' ? 'In Behandeling' : klacht.status === 'completed' ? 'Afgerond' : 'Open'}
+        </span>
+      </div>
 
       {#if klacht?.email}
-        <p class="text-base text-gray-300 mb-2">Email: {klacht.email}</p>
+        <div class="email-section">
+          <span class="label">Email:</span>
+          <span class="value">{klacht.email}</span>
+        </div>
       {/if}
 
       {#if klacht?.description}
-        <p class="text-lg sm:text-base leading-relaxed">{klacht.description}</p>
-      {:else}
-        <p class="text-lg text-gray-500">No description provided.</p>
-      {/if}
-      <div
-        class="mt-4 flex flex-row justify-between sm:flex-row sm:items-center sm:space-x-4"
-      >
-        <div class="flex-1">
-          <p class="block text-lg font-bold mb-2">Status</p>
-          <select
-            bind:value={klacht.status}
-            onchange={onStatusChange}
-            class="sm:w-auto block px-3 py-2 rounded bg-neutral-800 text-sm"
-          >
-            <option value="open">Open</option>
-            <option value="in_progress">In behandeling</option>
-            <option value="completed">Compleet</option>
-          </select>
+        <div class="description-section">
+          <span class="label">Beschrijving:</span>
+          <p class="description">{klacht.description}</p>
         </div>
+      {/if}
 
-        <div
-          class="mt-3 sm:mt-0 text-sm text-gray-400 h-full flex flex-col justify-between"
+      <div class="status-section">
+        <label class="label">Status Wijzigen</label>
+        <select
+          bind:value={klacht.status}
+          onchange={onStatusChange}
+          class="status-select"
         >
-          <p class="">
-            updated: {new Date(klacht.updated_at).toLocaleString()}
-          </p>
-          <p class="">
-            created: {new Date(klacht.created_at).toLocaleString()}
-          </p>
+          <option value="open">Open</option>
+          <option value="in_progress">In behandeling</option>
+          <option value="completed">Afgerond</option>
+        </select>
+      </div>
+
+      <div class="timestamps">
+        <div class="timestamp-item">
+          <span class="label">Laatst bijgewerkt</span>
+          <span class="value">{new Date(klacht.updated_at).toLocaleDateString('nl-NL')}</span>
+        </div>
+        <div class="timestamp-item">
+          <span class="label">Aangemaakt</span>
+          <span class="value">{new Date(klacht.created_at).toLocaleDateString('nl-NL')}</span>
         </div>
       </div>
     </div>
   </div>
 </KlachtLayout>
+
+<style>
+  .klacht-detail {
+    padding: 1rem;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .detail-card {
+    background: #1f2937;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    border: 1px solid #374151;
+  }
+
+  .klacht-image {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #374151;
+  }
+
+  .klacht-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #f3f4f6;
+    margin: 0;
+    flex: 1;
+  }
+
+  .status-badge {
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    white-space: nowrap;
+  }
+
+  .status-open {
+    background: #ef4444;
+    color: #fff;
+  }
+
+  .status-in_progress {
+    background: #f59e0b;
+    color: #fff;
+  }
+
+  .status-completed {
+    background: #10b981;
+    color: #fff;
+  }
+
+  .email-section,
+  .description-section,
+  .status-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+  .value {
+    font-size: 0.9375rem;
+    color: #e5e7eb;
+  }
+
+  .description {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: #d1d5db;
+    margin: 0;
+  }
+
+  .status-select {
+    background: #111827;
+    border: 1px solid #374151;
+    color: #fff;
+    padding: 0.625rem 0.875rem;
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .status-select:hover {
+    border-color: #4b5563;
+  }
+
+  .status-select:focus {
+    outline: none;
+    border-color: #60a5fa;
+  }
+
+  .status-select option {
+    background: #111827;
+    color: #fff;
+  }
+
+  .timestamps {
+    display: flex;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #374151;
+  }
+
+  .timestamp-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  @media (max-width: 768px) {
+    .header-row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .timestamps {
+      flex-direction: column;
+    }
+  }
+</style>

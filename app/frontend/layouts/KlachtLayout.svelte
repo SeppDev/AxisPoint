@@ -45,7 +45,12 @@
     }
     markers = [];
 
-    for (let klacht of klachten) {
+    // Filter klachten based on selectedStatus
+    const filteredKlachten = klachten.filter(
+      (k) => selectedStatus === "all" || k.status === selectedStatus
+    );
+
+    for (let klacht of filteredKlachten) {
       const marker = new L.Marker([klacht.latitude, klacht.longitude], {
         title: klacht.name,
       }).addTo(map);
@@ -76,6 +81,7 @@
   // react to status changes and refresh markers
   $effect(() => {
     if (map) {
+      selectedStatus; // track selectedStatus
       refreshMarkers();
     }
   });
