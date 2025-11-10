@@ -90,7 +90,7 @@
 
   <div class="flex items-center justify-center h-full w-full">
     <div
-      class="md:w-100 not-md:h-full justify-center md:rounded-xl w-full p-4 flex flex-col bg-ctp-crust"
+      class="md:w-100 not-md:h-full justify-center md:rounded-xl w-full p-4 flex flex-col"
     >
       <p class="text-2xl font-bold">Melding</p>
       <form class="flex flex-col gap-4">

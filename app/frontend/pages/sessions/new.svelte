@@ -1,19 +1,19 @@
 <script lang="ts">
-  import type { FormComponentSlotProps } from "@inertiajs/core"
-  import { Form } from "@inertiajs/svelte"
-  import { LoaderCircle } from "@lucide/svelte"
+  import type { FormComponentSlotProps } from "@inertiajs/core";
+  import { Form } from "@inertiajs/svelte";
+  import { LoaderCircle } from "@lucide/svelte";
 
-  import InputError from "@/components/input-error.svelte"
-  import TextLink from "@/components/text-link.svelte"
-  import { Button } from "@/components/ui/button"
-  import { Input } from "@/components/ui/input"
-  import { Label } from "@/components/ui/label"
-  import AuthBase from "@/layouts/auth-layout.svelte"
+  import InputError from "@/components/input-error.svelte";
+  import TextLink from "@/components/text-link.svelte";
+  import { Button } from "@/components/ui/button";
+  import { Input } from "@/components/ui/input";
+  import { Label } from "@/components/ui/label";
+  import AuthBase from "@/layouts/auth-layout.svelte";
   import {
     newIdentityPasswordResetPath,
     signInPath,
     signUpPath,
-  } from "@/routes"
+  } from "@/routes";
 </script>
 
 <svelte:head>
@@ -81,11 +81,6 @@
           {/if}
           Log in
         </Button>
-      </div>
-
-      <div class="text-muted-foreground text-center text-sm">
-        Don't have an account?
-        <TextLink href={signUpPath()} tabindex={5}>Sign up</TextLink>
       </div>
     {/snippet}
   </Form>

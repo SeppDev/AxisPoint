@@ -1,17 +1,18 @@
 <script lang="ts">
-  import { inertia } from "@inertiajs/svelte"
-  import type { Snippet } from "svelte"
+  import { inertia } from "@inertiajs/svelte";
+  import type { Snippet } from "svelte";
 
-  import AppLogoIcon from "@/components/app-logo-icon.svelte"
-  import { rootPath } from "@/routes"
+  import AppLogoIcon from "@/components/app-logo-icon.svelte";
+  import { rootPath } from "@/routes";
+  import AnimatedSigma from "@/components/AnimatedSigma.svelte";
 
   interface Props {
-    title?: string
-    description?: string
-    children: Snippet
+    title?: string;
+    description?: string;
+    children: Snippet;
   }
 
-  let { title, description, children }: Props = $props()
+  let { title, description, children }: Props = $props();
 </script>
 
 <div
@@ -26,9 +27,7 @@
           class="flex flex-col items-center gap-2 font-medium"
         >
           <div class="mb-1 flex size-14 items-center justify-center rounded-md">
-            <AppLogoIcon
-              class="size-14 fill-current text-[var(--foreground)] dark:text-white"
-            />
+            <AnimatedSigma size={100} tilt={0} />
           </div>
           <span class="sr-only">{title}</span>
         </a>
