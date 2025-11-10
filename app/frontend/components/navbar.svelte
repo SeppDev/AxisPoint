@@ -1,6 +1,7 @@
 <script lang="ts">
+  import { sessionPath } from "@/routes";
   import AnimatedSigma from "./AnimatedSigma.svelte";
-  import { page } from "@inertiajs/svelte";
+  import { Link, page, router } from "@inertiajs/svelte";
 
   // auth user from Inertia shared props (inertia_share in InertiaController)
   let authUser = $state<any>(null);
@@ -10,6 +11,10 @@
       authUser = $page.props?.auth?.user ?? null;
     });
   });
+
+  const handleLogout = () => {
+    router.flushAll();
+  };
 </script>
 
 <div
@@ -30,6 +35,12 @@
     {#if authUser}
       <a href="/dashboard">dashboard</a>
       <a href="/users">gebruikers</a>
+      <Link
+        class="cursor-pointer"
+        onclick={handleLogout}
+        method="delete"
+        href={sessionPath({ id: $page.props.auth.session.id })}>uitloggen</Link
+      >
     {:else}
       <a href="/login">login</a>
     {/if}
