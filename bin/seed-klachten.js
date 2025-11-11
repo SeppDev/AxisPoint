@@ -1,35 +1,17 @@
 #!/usr/bin/env node
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
 import { faker } from '@faker-js/faker';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Configuration
 const API_URL = process.env.API_URL || 'http://localhost:3000/api/klacht';
-const NUM_KLACHTEN = 10000;
-const IMAGES_FOLDER = path.join(__dirname, 'seed-images');
+const NUM_KLACHTEN = 500;
+const LOREM_PICSUM_URL = 'https://picsum.photos';
 
-// Load all images from the seed-images folder
-let imageFiles = [];
-try {
-  if (fs.existsSync(IMAGES_FOLDER)) {
-    imageFiles = fs.readdirSync(IMAGES_FOLDER)
-      .filter(file => /\.(jpg|jpeg|png|gif|webp)$/i.test(file))
-      .map(file => path.join(IMAGES_FOLDER, file));
-    console.log(`📁 Loaded ${imageFiles.length} images from ${IMAGES_FOLDER}`);
-  } else {
-    console.warn(`⚠️  Images folder not found: ${IMAGES_FOLDER}`);
-    console.warn(`   Creating folder... Please add images to this folder.`);
-    fs.mkdirSync(IMAGES_FOLDER, { recursive: true });
-  }
-} catch (error) {
-  console.error(`❌ Error loading images: ${error.message}`);
-}
+// Rotterdam bounding box (approximate city limits)
+// Format: [minLat, maxLat, minLon, maxLon]
+const ROTTERDAM_BOUNDS = [51.8625, 51.9917, 4.3792, 4.6014];
+
+console.log('🌍 Generating klachten for Rotterdam, Netherlands');
 
 // Date range for 2025
 const START_OF_YEAR = new Date('2025-01-01T00:00:00');
@@ -45,17 +27,37 @@ function getRandomDateIn2025() {
   return new Date(randomTime);
 }
 
-// Get a random image file
-function getRandomImage() {
-  if (imageFiles.length === 0) return null;
-  return faker.helpers.arrayElement(imageFiles);
+// Get a random location within Rotterdam
+function getRandomLocation() {
+  const [minLat, maxLat, minLon, maxLon] = ROTTERDAM_BOUNDS;
+  
+  const latitude = faker.number.float({ min: minLat, max: maxLat, fractionDigits: 6 });
+  const longitude = faker.number.float({ min: minLon, max: maxLon, fractionDigits: 6 });
+  
+  return { latitude, longitude };
+}
+
+// Get a random image URL from Lorem Picsum
+function getRandomImageUrl() {
+  const width = faker.helpers.arrayElement([800, 1024, 1200]);
+  const height = faker.helpers.arrayElement([600, 768, 900]);
+  const imageId = faker.number.int({ min: 1, max: 1000 });
+  return `${LOREM_PICSUM_URL}/${width}/${height}?random=${imageId}`;
+}
+
+// Download image from URL
+async function downloadImage(url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to download image: ${response.status}`);
+  }
+  return await response.blob();
 }
 
 // Generate a random klacht
 function generateKlacht() {
-  const latitude = faker.location.latitude();
-  const longitude = faker.location.longitude();
-  const imagePath = getRandomImage();
+  const { latitude, longitude } = getRandomLocation();
+  const imageUrl = getRandomImageUrl();
   
   // Generate random name and description using faker
   const name = faker.lorem.sentence({ min: 3, max: 8 }).slice(0, -1); // Remove period
@@ -69,7 +71,7 @@ function generateKlacht() {
     longitude: longitude,
     status: faker.helpers.arrayElement(statuses),
     created_at: getRandomDateIn2025().toISOString(),
-    imagePath: imagePath,
+    imageUrl: imageUrl,
   };
 }
 
@@ -84,13 +86,14 @@ async function createKlacht(klachtData) {
     formData.append('klacht[longitude]', klachtData.longitude.toString());
     formData.append('klacht[status]', klachtData.status);
     
-    // Add image if available
-    if (klachtData.imagePath) {
-      const imageBuffer = fs.readFileSync(klachtData.imagePath);
-      const imageBlob = new Blob([imageBuffer], { 
-        type: `image/${path.extname(klachtData.imagePath).slice(1)}` 
-      });
-      formData.append('klacht[image]', imageBlob, path.basename(klachtData.imagePath));
+    // Download and add image from Lorem Picsum
+    if (klachtData.imageUrl) {
+      try {
+        const imageBlob = await downloadImage(klachtData.imageUrl);
+        formData.append('klacht[image]', imageBlob, `klacht-${Date.now()}.jpg`);
+      } catch (error) {
+        console.warn(`⚠️  Failed to download image: ${error.message}`);
+      }
     }
     
     const response = await fetch(API_URL, {
@@ -111,14 +114,8 @@ async function createKlacht(klachtData) {
 
 // Main seeding function
 async function seedKlachten() {
-  console.log(`🌱 Seeding ${NUM_KLACHTEN} fake klachten from around the world...\n`);
-  
-  if (imageFiles.length === 0) {
-    console.warn(`⚠️  No images found. Klachten will be created without images.`);
-    console.warn(`   Add images to: ${IMAGES_FOLDER}\n`);
-  } else {
-    console.log(`📸 Using ${imageFiles.length} images for klachten\n`);
-  }
+  console.log(`🌱 Seeding ${NUM_KLACHTEN} fake klachten in Rotterdam...\n`);
+  console.log(`📸 Downloading random images from Lorem Picsum (https://picsum.photos)\n`);
   
   let created = 0;
   let failed = 0;
@@ -147,9 +144,11 @@ async function seedKlachten() {
   console.log('Stats:');
   console.log(`  Successfully created: ${created}`);
   console.log(`  Failed: ${failed}`);
+  console.log(`\nStatus Distribution:`);
   console.log(`  Open: ${statusCount.open}`);
   console.log(`  In Progress: ${statusCount.in_progress}`);
   console.log(`  Completed: ${statusCount.completed}`);
+  console.log(`\nAll klachten generated within Rotterdam, Netherlands 🇳🇱`);
 }
 
 // Run the seeder

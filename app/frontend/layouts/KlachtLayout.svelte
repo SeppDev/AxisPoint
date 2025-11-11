@@ -21,42 +21,35 @@
   let markerClusterGroup: any = null;
   let refreshTimeout: any = null;
   
-  // Virtual scrolling state
   let scrollContainer: HTMLElement | null = null;
   let scrollTop = $state(0);
-  let containerHeight = $state(0);
-  const itemHeight = 140; // Approximate height of each klacht card in pixels
+  let containerHeight = $state(600); 
+  const itemHeight = 140; 
   
-  // Calculate visible items for virtual scrolling
-  const visibleRange = $derived(() => {
-    const filteredKlachten = klachten.filter(
-      (k) => selectedStatus === "all" || k.status === selectedStatus
-    );
-    const startIndex = Math.floor(scrollTop / itemHeight);
+  // Filter klachten based on status
+  const filteredKlachten = $derived(
+    klachten.filter((k) => selectedStatus === "all" || k.status === selectedStatus)
+  );
+  
+
+  const visibleRange = $derived.by(() => {
+    const startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - 2);
     const endIndex = Math.min(
       filteredKlachten.length,
-      Math.ceil((scrollTop + containerHeight) / itemHeight) + 1
+      Math.ceil((scrollTop + containerHeight) / itemHeight) + 2 
     );
     return { startIndex, endIndex };
   });
   
-  const visibleKlachten = $derived(() => {
-    const filteredKlachten = klachten.filter(
-      (k) => selectedStatus === "all" || k.status === selectedStatus
-    );
-    const { startIndex, endIndex } = visibleRange();
+  const visibleKlachten = $derived.by(() => {
+    const { startIndex, endIndex } = visibleRange;
     return filteredKlachten.slice(startIndex, endIndex).map((klacht, idx) => ({
       ...klacht,
       virtualIndex: startIndex + idx,
     }));
   });
   
-  const totalHeight = $derived(() => {
-    const filteredCount = klachten.filter(
-      (k) => selectedStatus === "all" || k.status === selectedStatus
-    ).length;
-    return filteredCount * itemHeight;
-  });
+  const totalHeight = $derived(filteredKlachten.length * itemHeight);
   
   function handleScroll(e: Event) {
     const target = e.target as HTMLElement;
@@ -100,7 +93,7 @@
         chunkDelay: 50,
         maxClusterRadius: 80,
         spiderfyOnMaxZoom: true,
-        showCoverageOnHover: false,
+        showCoverageOnHover: true,
         zoomToBoundsOnClick: true,
       });
 
@@ -188,8 +181,8 @@
       {#if showTabs}
         {@render children()}
         <!-- Virtual scrolling container -->
-        <div style="height: {totalHeight()}px; position: relative; width: 100%;">
-          {#each visibleKlachten() as klacht (klacht.id)}
+        <div style="height: {totalHeight}px; position: relative; width: 100%;">
+          {#each visibleKlachten as klacht (klacht.id)}
             <a
               class="klacht-card"
               href={`/dashboard/klacht/${klacht.id}`}
