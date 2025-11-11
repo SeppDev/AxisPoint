@@ -204,8 +204,6 @@
       let comparison = 0;
       if (sortBy === 'date') {
         comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-      } else if (sortBy === 'date') {
-        comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
       } else if (sortBy === 'status') {
         const statusOrder = { open: 0, in_progress: 1, completed: 2 };
         comparison = (statusOrder[a.status as keyof typeof statusOrder] ?? 0) - (statusOrder[b.status as keyof typeof statusOrder] ?? 0);
