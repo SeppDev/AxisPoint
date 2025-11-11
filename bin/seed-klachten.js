@@ -4,8 +4,17 @@ import { faker } from '@faker-js/faker';
 
 // Configuration
 const API_URL = process.env.API_URL || 'http://localhost:3000/api/klacht';
-const NUM_KLACHTEN = 500;
-const LOREM_PICSUM_URL = 'https://picsum.photos';
+
+// Allow CLI argument for number of completed klachten
+const argv = process.argv.slice(2);
+let NUM_KLACHTEN = 25000;
+let NUM_COMPLETED = null;
+if (argv[0] && !isNaN(Number(argv[0]))) {
+  NUM_KLACHTEN = Number(argv[0]);
+}
+if (argv[1] && !isNaN(Number(argv[1]))) {
+  NUM_COMPLETED = Number(argv[1]);
+}
 
 // Rotterdam bounding box (approximate city limits)
 // Format: [minLat, maxLat, minLon, maxLon]
@@ -37,45 +46,39 @@ function getRandomLocation() {
   return { latitude, longitude };
 }
 
+
+
+
+
 // Get a random image URL from Lorem Picsum
 function getRandomImageUrl() {
   const width = faker.helpers.arrayElement([800, 1024, 1200]);
   const height = faker.helpers.arrayElement([600, 768, 900]);
   const imageId = faker.number.int({ min: 1, max: 1000 });
-  return `${LOREM_PICSUM_URL}/${width}/${height}?random=${imageId}`;
+  return `https://picsum.photos/${width}/${height}?random=${imageId}`;
 }
 
-// Download image from URL
-async function downloadImage(url) {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to download image: ${response.status}`);
-  }
-  return await response.blob();
-}
-
-// Generate a random klacht
-function generateKlacht() {
+function generateKlacht(statusOverride = null) {
   const { latitude, longitude } = getRandomLocation();
-  const imageUrl = getRandomImageUrl();
-  
   // Generate random name and description using faker
   const name = faker.lorem.sentence({ min: 3, max: 8 }).slice(0, -1); // Remove period
   const description = faker.lorem.paragraph({ min: 2, max: 5 });
-  
   return {
     name: name,
     description: description,
     contact_email: faker.internet.email(),
     latitude: latitude,
     longitude: longitude,
-    status: faker.helpers.arrayElement(statuses),
+    status: statusOverride || faker.helpers.arrayElement(statuses),
     created_at: getRandomDateIn2025().toISOString(),
-    imageUrl: imageUrl,
+    imageUrl: getRandomImageUrl(),
   };
 }
 
-// Post a klacht to the API
+
+
+
+// Post a klacht to the API (with image URL)
 async function createKlacht(klachtData) {
   try {
     const formData = new FormData();
@@ -85,26 +88,16 @@ async function createKlacht(klachtData) {
     formData.append('klacht[latitude]', klachtData.latitude.toString());
     formData.append('klacht[longitude]', klachtData.longitude.toString());
     formData.append('klacht[status]', klachtData.status);
-    
-    // Download and add image from Lorem Picsum
     if (klachtData.imageUrl) {
-      try {
-        const imageBlob = await downloadImage(klachtData.imageUrl);
-        formData.append('klacht[image]', imageBlob, `klacht-${Date.now()}.jpg`);
-      } catch (error) {
-        console.warn(`⚠️  Failed to download image: ${error.message}`);
-      }
+      formData.append('klacht[image_url]', klachtData.imageUrl);
     }
-    
     const response = await fetch(API_URL, {
       method: 'POST',
       body: formData,
     });
-    
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
     return await response.json();
   } catch (error) {
     console.error(`Failed to create klacht: ${error.message}`);
@@ -112,34 +105,51 @@ async function createKlacht(klachtData) {
   }
 }
 
-// Main seeding function
+
+// Main seeding function with batching
 async function seedKlachten() {
   console.log(`🌱 Seeding ${NUM_KLACHTEN} fake klachten in Rotterdam...\n`);
-  console.log(`📸 Downloading random images from Lorem Picsum (https://picsum.photos)\n`);
-  
+  console.log(`⚡ No images, batching requests in parallel\n`);
+  const BATCH_SIZE = 100;
   let created = 0;
   let failed = 0;
   const statusCount = { open: 0, in_progress: 0, completed: 0 };
-  
-  for (let i = 0; i < NUM_KLACHTEN; i++) {
-    try {
-      const klacht = generateKlacht();
-      await createKlacht(klacht);
-      
-      statusCount[klacht.status]++;
-      created++;
-      
-      // Show progress with counter
-      process.stdout.write(`\r✅ Progress: ${created}/${NUM_KLACHTEN} (${Math.round((created/NUM_KLACHTEN)*100)}%) | Open: ${statusCount.open} | In Progress: ${statusCount.in_progress} | Completed: ${statusCount.completed}`);
-      
-      // Small delay to avoid overwhelming the server
-      await new Promise(resolve => setTimeout(resolve, 100));
-    } catch {
-      failed++;
-      process.stdout.write(`\r❌ Progress: ${created}/${NUM_KLACHTEN} (${Math.round((created/NUM_KLACHTEN)*100)}%) | Failed: ${failed}`);
+  let allKlachten;
+  if (NUM_COMPLETED !== null && NUM_COMPLETED > 0 && NUM_COMPLETED < NUM_KLACHTEN) {
+    // Fill with exactly NUM_COMPLETED completed, rest random
+    allKlachten = [
+      ...Array.from({ length: NUM_COMPLETED }, () => generateKlacht('completed')),
+      ...Array.from({ length: NUM_KLACHTEN - NUM_COMPLETED }, () => generateKlacht()),
+    ];
+    // Shuffle so completed are not all at the start
+    for (let i = allKlachten.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [allKlachten[i], allKlachten[j]] = [allKlachten[j], allKlachten[i]];
     }
+  } else {
+    allKlachten = Array.from({ length: NUM_KLACHTEN }, () => generateKlacht());
   }
-  
+  const startTime = process.hrtime.bigint();
+  for (let i = 0; i < NUM_KLACHTEN; i += BATCH_SIZE) {
+    const batch = allKlachten.slice(i, i + BATCH_SIZE);
+    const results = await Promise.allSettled(batch.map(createKlacht));
+    for (let j = 0; j < results.length; j++) {
+      const klacht = batch[j];
+      if (results[j].status === 'fulfilled') {
+        statusCount[klacht.status]++;
+        created++;
+      } else {
+        failed++;
+      }
+    }
+    // ETA calculation
+    const elapsed = Number(process.hrtime.bigint() - startTime) / 1e9;
+    const rate = created / elapsed;
+    const remaining = NUM_KLACHTEN - created;
+    const eta = rate > 0 ? remaining / rate : 0;
+    const etaStr = eta > 60 ? `${Math.floor(eta/60)}m ${Math.round(eta%60)}s` : `${Math.round(eta)}s`;
+    process.stdout.write(`\r✅ Progress: ${created}/${NUM_KLACHTEN} (${Math.round((created/NUM_KLACHTEN)*100)}%) | Open: ${statusCount.open} | In Progress: ${statusCount.in_progress} | Completed: ${statusCount.completed} | Failed: ${failed} | ETA: ${etaStr}   `);
+  }
   console.log('\n\n✅ Seeding complete!\n');
   console.log('Stats:');
   console.log(`  Successfully created: ${created}`);
