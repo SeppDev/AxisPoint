@@ -7,15 +7,14 @@
     klachten,
     initialView,
     showTabs = false,
+    selectedStatus = $bindable("all"),
   }: {
     children: any;
     klachten: any[];
     initialView: any[];
     showTabs?: boolean;
+    selectedStatus?: string;
   } = $props();
-
-  // selectedStatus: 'all' | 'open' | 'in_progress' | 'completed'
-  let selectedStatus: string = $state("all");
 
   let map: Map;
   let markers: any[] = [];
@@ -46,7 +45,12 @@
     }
     markers = [];
 
-    for (let klacht of klachten) {
+    // Filter klachten based on selectedStatus
+    const filteredKlachten = klachten.filter(
+      (k) => selectedStatus === "all" || k.status === selectedStatus
+    );
+
+    for (let klacht of filteredKlachten) {
       const marker = new L.Marker([klacht.latitude, klacht.longitude], {
         title: klacht.name,
       }).addTo(map);
@@ -77,6 +81,7 @@
   // react to status changes and refresh markers
   $effect(() => {
     if (map) {
+      selectedStatus; // track selectedStatus
       refreshMarkers();
     }
   });
@@ -93,29 +98,6 @@
 <Layout>
   <div class="flex flex-row flex-grow h-full w-full overflow-none">
     <div class="grow h-full">
-      {#if showTabs}
-        <div class="klacht-tabs">
-          <button
-            class="klacht-tab {selectedStatus === 'all' ? 'active' : ''}"
-            onclick={() => (selectedStatus = "all")}>All</button
-          >
-          <button
-            class="klacht-tab {selectedStatus === 'open' ? 'active' : ''}"
-            onclick={() => (selectedStatus = "open")}>Open</button
-          >
-          <button
-            class="klacht-tab {selectedStatus === 'in_progress'
-              ? 'active'
-              : ''}"
-            onclick={() => (selectedStatus = "in_progress")}
-            >In behandeling</button
-          >
-          <button
-            class="klacht-tab {selectedStatus === 'completed' ? 'active' : ''}"
-            onclick={() => (selectedStatus = "completed")}>Compleet</button
-          >
-        </div>
-      {/if}
       <div class="h-full" use:mapAction></div>
     </div>
     <div
@@ -124,13 +106,28 @@
         : 'flex'}"
     >
       {#if showTabs}
+        {@render children()}
         {#each klachten.filter((k) => selectedStatus === "all" || k.status === selectedStatus) as klacht}
           <a
-            class="w-full p-4 rounded-xl bg-neutral-700"
+            class="klacht-card"
             href={`/dashboard/klacht/${klacht.id}`}
           >
-            <p class="text-xl">{klacht.name}</p>
-            <p class="">{klacht.description}</p>
+            <div class="klacht-header">
+              <h3 class="klacht-name">{klacht.name}</h3>
+              <span class="status-badge status-{klacht.status || 'open'}">
+                {klacht.status === 'in_progress' ? 'In Behandeling' : klacht.status === 'completed' ? 'Afgerond' : 'Open'}
+              </span>
+            </div>
+            <p class="klacht-description">{klacht.description}</p>
+            {#if klacht.email}
+              <div class="klacht-meta">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span class="email-text">{klacht.email}</span>
+              </div>
+            {/if}
           </a>
         {/each}
       {:else}
@@ -141,18 +138,96 @@
 </Layout>
 
 <style>
-  .klacht-tabs {
+  .klacht-card {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: var(--catppuccin-color-mantle, #232634);
+    border: 1px solid var(--catppuccin-color-surface0, #45475a);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
     display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .klacht-card:hover {
+    transform: translateX(4px);
+    border-color: var(--catppuccin-color-blue, #89b4fa);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 0 20px var(--catppuccin-color-blue, #89b4fa);
+    background: var(--catppuccin-color-base, #181825);
+  }
+
+  .klacht-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     gap: 0.5rem;
-    margin: 0.5rem;
   }
-  .klacht-tab {
-    padding: 0.35rem 0.6rem;
-    border-radius: 6px;
-    cursor: pointer;
+
+  .klacht-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--catppuccin-color-text, #cdd6f4);
+    margin: 0;
+    flex: 1;
+    line-height: 1.3;
   }
-  .klacht-tab.active {
-    background: #374151;
-    color: white;
+
+  .status-badge {
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .status-open {
+    background: var(--catppuccin-color-red, #f38ba8);
+    color: var(--catppuccin-color-crust, #11111b);
+  }
+
+  .status-in_progress {
+    background: var(--catppuccin-color-peach, #fab387);
+    color: var(--catppuccin-color-crust, #11111b);
+  }
+
+  .status-completed {
+    background: var(--catppuccin-color-green, #a6e3a1);
+    color: var(--catppuccin-color-crust, #11111b);
+  }
+
+  .klacht-description {
+    font-size: 0.875rem;
+    color: var(--catppuccin-color-subtext0, #a6adc8);
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .klacht-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--catppuccin-color-subtext1, #9399b2);
+    padding-top: 0.25rem;
+    border-top: 1px solid var(--catppuccin-color-surface0, #45475a);
+  }
+
+  .klacht-meta svg {
+    flex-shrink: 0;
+  }
+
+  .email-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 </style>
