@@ -3,11 +3,14 @@
   import { Input } from "@/components/ui/input";
   import Layout from "@/layouts/Layout.svelte";
   import Alert, { openDialog } from "@/components/alert.svelte";
+  import { LoaderCircle } from "@lucide/svelte";
 
   let email = $state("");
   let name = $state("");
   let description = $state("");
   let image: File | null = $state(null);
+
+  let buttonState = $state(false);
 
   function getLocation() {
     if (navigator.geolocation) {
@@ -58,12 +61,13 @@
 
   function errorCallback(err: any) {
     openDialog("kon locatie niet opnemen!");
-    console.log(err);
   }
 
   function onSubmit(event: Event) {
     event.preventDefault();
+    buttonState = true;
     getLocation();
+    buttonState = false;
   }
 </script>
 
@@ -73,12 +77,20 @@
     <div
       class="md:w-100 not-md:h-full justify-center md:rounded-xl w-full p-4 flex flex-col"
     >
-      <p class="text-2xl font-bold">Melding</p>
+      <p class="text-2xl font-bold">Melden</p>
       <form class="flex flex-col gap-4">
         <p>Email</p>
-        <Input bind:value={email} type="text" />
-        <p>Naam</p>
-        <Input bind:value={name} type="text" />
+        <Input
+          placeholder="voorbeeld@hotmail.com"
+          bind:value={email}
+          type="text"
+        />
+        <p>Titel</p>
+        <Input
+          placeholder="Mijn kat is overreden"
+          bind:value={name}
+          type="text"
+        />
         <p>Beschrijving</p>
         <Input bind:value={description} class="h-30" type="area" />
         <p>Foto</p>
@@ -98,7 +110,12 @@
             console.log("selected file:", image);
           }}
         />
-        <Button onclick={onSubmit}>Meld</Button>
+        <Button disabled={buttonState} onclick={onSubmit}>
+          {#if buttonState}
+            <LoaderCircle class="h-4 w-4 animate-spin" />
+          {/if}
+          Meld</Button
+        >
       </form>
     </div>
   </div>
