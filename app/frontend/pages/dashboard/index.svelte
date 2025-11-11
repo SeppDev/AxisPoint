@@ -243,7 +243,6 @@
         </div>
       </div>
     </section>
-
     <section>
       <h2 class="text-xl font-semibold mb-3">Recente meldingen</h2>
       {#if recent && recent.length}
