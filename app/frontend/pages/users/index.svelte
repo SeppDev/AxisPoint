@@ -5,6 +5,8 @@
   import { LoaderCircle } from "@lucide/svelte";
   import Alert, { openDialog } from "@/components/alert.svelte";
 
+  import { Form } from "@inertiajs/svelte";
+
   let accountEmail = $state("email@email.com");
   let accountUsername = $state("username");
   let accountPassword = $state("wachtwoord");
@@ -19,17 +21,18 @@
     form.append("password", accountPassword);
     form.append("password_confirmation", accountPassword);
 
-    fetch("/api/user", {
+    let response = await fetch("/api/user", {
       method: "POST",
       body: form,
-    })
-      .then((response) => response.json())
-      .then((json) => console.log(json))
-      .then(() => openDialog("Account is aangemaakt"))
-      .catch(() =>
-        openDialog("Er ging iets fout tijdens het aanmaken van het account"),
-      )
-      .finally(() => (creating = false));
+    });
+
+    if (response.status === 200) {
+      openDialog("Account is aangemaakt");
+    } else {
+      openDialog("Er ging iets fout tijdens het aanmaken van het account");
+    }
+
+    creating = false;
   }
 
   type User = {
@@ -52,12 +55,14 @@
   >
     <section class="w-full lg:w-100">
       <h3 class="text-xl font-semibold mb-3">Accounts</h3>
-      {#each users as user}
-        <div class="bg-ctp-mantle p-3 w-full rounded-xl">
-          <p class="text-xl">{user.name}</p>
-          <p>{user.email}</p>
-        </div>
-      {/each}
+      <div class="w-full flex flex-col gap-4">
+        {#each users as user}
+          <div class="bg-ctp-mantle p-3 w-full rounded-xl">
+            <p class="text-xl">{user.name}</p>
+            <p>{user.email}</p>
+          </div>
+        {/each}
+      </div>
     </section>
 
     <section class="w-full lg:w-100">
