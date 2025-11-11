@@ -192,18 +192,19 @@
     gifEntry = gifForOpen(stats.open ?? 0);
   });
 
-  // Filter and sorting state for meldingen
-  let viewMode = $state<'recent' | 'all'>('recent');
+  // Sorting state for meldingen
   let sortBy = $state<'date' | 'status' | 'name'>('date');
   let sortOrder = $state<'asc' | 'desc'>('desc');
 
   const displayedKlachten = $derived(() => {
-    let filtered = viewMode === 'recent' ? recent.slice(0, 5) : [...recent];
+    let filtered = [...recent];
     
     // Sort the filtered list
     filtered.sort((a, b) => {
       let comparison = 0;
       if (sortBy === 'date') {
+        comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      } else if (sortBy === 'date') {
         comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
       } else if (sortBy === 'status') {
         const statusOrder = { open: 0, in_progress: 1, completed: 2 };
@@ -237,29 +238,10 @@
       <div class="md:col-span-2 col-span-3">
         <section>
           <div class="flex items-center justify-between mb-3">
-            <h2 class="text-xl font-semibold">Meldingen</h2>
-          </div>
-
-          <!-- Tabs and Sorting Controls -->
-          <div class="flex flex-col sm:flex-row gap-3 mb-4">
-            <!-- View Mode Tabs -->
-            <div class="flex gap-2">
-              <button
-                class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors {viewMode === 'recent' ? 'bg-ctp-sapphire text-ctp-crust' : 'bg-ctp-surface0 text-ctp-text hover:bg-ctp-surface1'}"
-                onclick={() => viewMode = 'recent'}
-              >
-                Recent (5)
-              </button>
-              <button
-                class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors {viewMode === 'all' ? 'bg-ctp-sapphire text-ctp-crust' : 'bg-ctp-surface0 text-ctp-text hover:bg-ctp-surface1'}"
-                onclick={() => viewMode = 'all'}
-              >
-                Alle ({recent.length})
-              </button>
-            </div>
-
+            <h2 class="text-xl font-semibold">Recente meldingen</h2>
+            
             <!-- Sort Controls -->
-            <div class="flex gap-2 flex-wrap">
+            <div class="flex gap-2">
               <select
                 bind:value={sortBy}
                 class="px-3 py-2 rounded-lg text-sm bg-ctp-surface0 text-ctp-text border border-ctp-surface1 focus:outline-none focus:ring-2 focus:ring-ctp-sapphire"
