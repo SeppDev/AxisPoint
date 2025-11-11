@@ -5,11 +5,9 @@
   import { LoaderCircle } from "@lucide/svelte";
   import Alert, { openDialog } from "@/components/alert.svelte";
 
-  import { Form } from "@inertiajs/svelte";
-
-  let accountEmail = $state("email@email.com");
-  let accountUsername = $state("username");
-  let accountPassword = $state("wachtwoord");
+  let accountEmail = $state("");
+  let accountUsername = $state("");
+  let accountPassword = $state("");
 
   let creating = $state(false);
   async function createAccount() {
@@ -26,10 +24,13 @@
       body: form,
     });
 
+    const json = await response.json().catch(() => {});
+
     if (response.status === 200) {
       openDialog("Account is aangemaakt");
     } else {
-      openDialog("Er ging iets fout tijdens het aanmaken van het account");
+      const error: string = json.errors[0];
+      openDialog(error);
     }
 
     creating = false;
