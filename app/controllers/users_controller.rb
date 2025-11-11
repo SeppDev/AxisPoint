@@ -4,6 +4,8 @@ class UsersController < InertiaController
   skip_before_action :authenticate, only: %i[new create]
   before_action :require_no_authentication, only: %i[new create]
 
+  def index; end
+
   def new
     @user = User.new
   end
@@ -12,24 +14,20 @@ class UsersController < InertiaController
     @user = User.new(user_params)
 
     if @user.save
-      session_record = @user.sessions.create!
-      cookies.signed.permanent[:session_token] = {value: session_record.id, httponly: true}
-
-      send_email_verification
-      redirect_to dashboard_path, notice: "Welcome! You have signed up successfully"
+      render json: { status: 'success' }
     else
-      redirect_to sign_up_path, inertia: inertia_errors(@user)
+      render json: { status: 'failed' }, status: :unprocessable_content
     end
   end
 
   def destroy
     user = Current.user
-    if user.authenticate(params[:password_challenge] || "")
+    if user.authenticate(params[:password_challenge] || '')
       user.destroy!
       Current.session = nil
-      redirect_to root_path, notice: "Your account has been deleted", inertia: {clear_history: true}
+      redirect_to root_path, notice: 'Your account has been deleted', inertia: { clear_history: true }
     else
-      redirect_to settings_profile_path, inertia: {errors: {password_challenge: "Password challenge is invalid"}}
+      redirect_to settings_profile_path, inertia: { errors: { password_challenge: 'Password challenge is invalid' } }
     end
   end
 

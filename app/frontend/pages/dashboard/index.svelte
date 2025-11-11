@@ -218,14 +218,13 @@
 </script>
 
 <Layout>
-  <div class="p-6 max-w-5xl mx-auto">
+  <div class="p-6 max-w-5xl mx-auto flex flex-col gap-4">
+    <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
 
-    <div class="flex items-center justify-between mb-6">
-      <h1 class="text-3xl font-bold">Dashboard</h1>
-      <a
-        href="/dashboard/klacht"
-        class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold shadow"
-        style="background: var(--catppuccin-color-sapphire); color: var(--catppuccin-color-crust);"
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 items-start">
+      <div
+        class="col-span-2 p-6 rounded-3xl shadow-2xl h-96 flex items-center justify-center"
+        style="background: linear-gradient(135deg, var(--catppuccin-color-mantle), var(--catppuccin-color-crust)); color: var(--catppuccin-color-text);"
       >
         Open map
       </a>
@@ -356,7 +355,39 @@
         </div>
 
       </div>
-    </div>
+    </section>
+    <section>
+      <h2 class="text-xl font-semibold mb-3">Recente meldingen</h2>
+      {#if recent && recent.length}
+        <div class="klachten-list-dashboard">
+          {#each recent as k}
+            <a
+              class="klacht-card-dashboard"
+              href={`/dashboard/klacht/${k.id}`}
+            >
+              <div class="klacht-card-row-dashboard">
+                <div class="klacht-card-in-dashboard w-full">
+                  <div class="klacht-header-dashboard w-full">
+                    <span class="klacht-name-dashboard">{k.name}</span>
+                    <span class="status-badge-dashboard status-{k.status || 'open'}">
+                      {k.status === 'in_progress' ? 'In Behandeling' : k.status === 'completed' ? 'Afgerond' : 'Open'}
+                    </span>
+                  </div>
+                  <div class="klacht-meta-dashboard">
+                    <span class="meta-item-dashboard">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7V3m8 4V3M3 11h18M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"/></svg>
+                      <span>{new Date(k.created_at).toLocaleDateString('nl-NL')}</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          {/each}
+        </div>
+      {:else}
+        <p class="text-sm text-gray-400">Geen recente meldingen.</p>
+      {/if}
+    </section>
   </div>
 </Layout>
 

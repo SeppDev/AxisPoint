@@ -1,15 +1,8 @@
 <script lang="ts">
   import { Button } from "@/components/ui/button";
-  import * as Dialog from "@/components/ui/dialog";
   import { Input } from "@/components/ui/input";
   import Layout from "@/layouts/Layout.svelte";
-
-  let dialogOpen = $state(false);
-  let dialogDescription = $state("");
-  function openDialog(description: string) {
-    dialogOpen = true;
-    dialogDescription = description;
-  }
+  import Alert, { openDialog } from "@/components/alert.svelte";
 
   let email = $state("");
   let name = $state("");
@@ -75,22 +68,10 @@
 </script>
 
 <Layout>
-  <Dialog.Root bind:open={dialogOpen}>
-    <Dialog.Portal>
-      <Dialog.Overlay class="overlay" />
-      <Dialog.Content>
-        <Dialog.Title>Melding</Dialog.Title>
-        <Dialog.Description>{dialogDescription}</Dialog.Description>
-        <Dialog.Close>
-          <Button>Sluit</Button>
-        </Dialog.Close>
-      </Dialog.Content>
-    </Dialog.Portal>
-  </Dialog.Root>
-
+  <Alert />
   <div class="flex items-center justify-center h-full w-full">
     <div
-      class="md:w-100 not-md:h-full not-md:justify-center md:rounded-xl w-full p-4 flex flex-col bg-ctp-crust"
+      class="md:w-100 not-md:h-full justify-center md:rounded-xl w-full p-4 flex flex-col"
     >
       <p class="text-2xl font-bold">Melding</p>
       <form class="flex flex-col gap-4">
@@ -102,7 +83,11 @@
         <Input bind:value={description} class="h-30" type="area" />
         <p>Foto</p>
         {#if image}
-          <img src={URL.createObjectURL(image)} alt="preview" class="h-40" />
+          <img
+            src={URL.createObjectURL(image)}
+            alt="preview"
+            class="h-40 object-contain"
+          />
         {/if}
         <input
           type="file"

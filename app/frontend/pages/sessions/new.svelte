@@ -1,19 +1,15 @@
 <script lang="ts">
-  import type { FormComponentSlotProps } from "@inertiajs/core"
-  import { Form } from "@inertiajs/svelte"
-  import { LoaderCircle } from "@lucide/svelte"
+  import type { FormComponentSlotProps } from "@inertiajs/core";
+  import { Form } from "@inertiajs/svelte";
+  import { LoaderCircle } from "@lucide/svelte";
 
-  import InputError from "@/components/input-error.svelte"
-  import TextLink from "@/components/text-link.svelte"
-  import { Button } from "@/components/ui/button"
-  import { Input } from "@/components/ui/input"
-  import { Label } from "@/components/ui/label"
-  import AuthBase from "@/layouts/auth-layout.svelte"
-  import {
-    newIdentityPasswordResetPath,
-    signInPath,
-    signUpPath,
-  } from "@/routes"
+  import InputError from "@/components/input-error.svelte";
+  import TextLink from "@/components/text-link.svelte";
+  import { Button } from "@/components/ui/button";
+  import { Input } from "@/components/ui/input";
+  import { Label } from "@/components/ui/label";
+  import AuthBase from "@/layouts/auth-layout.svelte";
+  import { newIdentityPasswordResetPath } from "@/routes";
 </script>
 
 <svelte:head>
@@ -24,12 +20,7 @@
   title="Log in to your account"
   description="Enter your email and password below to log in"
 >
-  <Form
-    method="post"
-    action={signInPath()}
-    resetOnSuccess={["password"]}
-    class="flex flex-col gap-6"
-  >
+  <Form method="post" resetOnSuccess={["password"]} class="flex flex-col gap-6">
     {#snippet children({ processing, errors }: FormComponentSlotProps)}
       <div class="grid gap-6">
         <div class="grid gap-2">
@@ -81,11 +72,6 @@
           {/if}
           Log in
         </Button>
-      </div>
-
-      <div class="text-muted-foreground text-center text-sm">
-        Don't have an account?
-        <TextLink href={signUpPath()} tabindex={5}>Sign up</TextLink>
       </div>
     {/snippet}
   </Form>
