@@ -42,11 +42,19 @@
     completedVal.set(stats.completed ?? 0);
   });
 
-  onMount(() => {
+
+  function getCatppuccinColors() {
+    return {
+      text: getComputedStyle(document.documentElement).getPropertyValue('--catppuccin-color-text') || '#cdd6f4',
+      subtext: getComputedStyle(document.documentElement).getPropertyValue('--catppuccin-color-subtext1') || '#a6adc8',
+    };
+  }
+
+  function createChart() {
     if (!chartCanvas) return;
     const ctx = chartCanvas.getContext("2d");
     if (!ctx) return;
-
+    const { text: catppuccinText, subtext: catppuccinSubtext } = getCatppuccinColors();
     const centerTextPlugin = {
       id: "centerText",
       afterDraw(chart: any) {
@@ -57,7 +65,7 @@
         const centerX = (left + right) / 2;
         const centerY = (top + bottom) / 2;
         ctx.save();
-        ctx.fillStyle = opts.color || "rgba(255,255,255,0.95)";
+        ctx.fillStyle = catppuccinText;
         const fontSize = opts.fontSize || Math.max(18, (right - left) / 12);
         ctx.font = `${opts.fontWeight || 700} ${fontSize}px ${opts.fontFamily || "system-ui, Arial"}`;
         ctx.textAlign = "center";
@@ -66,7 +74,6 @@
         ctx.restore();
       },
     };
-
     const config: any = {
       type: "doughnut",
       data: {
@@ -88,7 +95,12 @@
         plugins: {
           legend: {
             position: "right",
-            labels: { boxWidth: 12, padding: 12, font: { size: 12 } },
+            labels: {
+              boxWidth: 12,
+              padding: 12,
+              font: { size: 12 },
+              color: catppuccinSubtext,
+            },
           },
           tooltip: { enabled: true, padding: 10 },
           centerText: { text: stats.total },
@@ -97,8 +109,27 @@
       },
       plugins: [centerTextPlugin],
     };
-
+    if (chartInstance) {
+      chartInstance.destroy();
+    }
     chartInstance = new Chart(ctx, config);
+  }
+
+  onMount(() => {
+    createChart();
+    // Listen for color scheme changes
+    const mql = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = () => {
+      createChart();
+    };
+    mql.addEventListener('change', handleChange);
+    return () => {
+      mql.removeEventListener('change', handleChange);
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
+    };
   });
 
   $effect(() => {
@@ -160,6 +191,30 @@
     // update gif when stats.open changes
     gifEntry = gifForOpen(stats.open ?? 0);
   });
+
+  // Sorting state for meldingen
+  let sortBy = $state<'date' | 'status' | 'name'>('date');
+  let sortOrder = $state<'asc' | 'desc'>('desc');
+
+  const displayedKlachten = $derived(() => {
+    let filtered = [...recent];
+    
+    // Sort the filtered list
+    filtered.sort((a, b) => {
+      let comparison = 0;
+      if (sortBy === 'date') {
+        comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      } else if (sortBy === 'status') {
+        const statusOrder = { open: 0, in_progress: 1, completed: 2 };
+        comparison = (statusOrder[a.status as keyof typeof statusOrder] ?? 0) - (statusOrder[b.status as keyof typeof statusOrder] ?? 0);
+      } else if (sortBy === 'name') {
+        comparison = a.name.localeCompare(b.name);
+      }
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+    
+    return filtered;
+  });
 </script>
 
 <Layout>
@@ -171,24 +226,87 @@
         class="col-span-2 p-6 rounded-3xl shadow-2xl h-96 flex items-center justify-center"
         style="background: linear-gradient(135deg, var(--catppuccin-color-mantle), var(--catppuccin-color-crust)); color: var(--catppuccin-color-text);"
       >
-        <div class="w-full h-full max-w-2xl max-h-80 relative px-4 py-2">
-          <canvas bind:this={chartCanvas} class="w-full h-full rounded-lg"
-          ></canvas>
+        Open map
+      </a>
+    </div>
 
-          <!-- quick link to open full map (mp) page -->
-          <div class="absolute top-3 right-3">
-            <a
-              href="/dashboard/klacht"
-              class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold shadow"
-              style="background: var(--catppuccin-color-sapphire); color: var(--catppuccin-color-crust);"
-            >
-              Open map
-            </a>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 items-start">
+      <!-- List of klachten on the left (col-span-2 on small screens, col-span-2 on md+) -->
+      <div class="md:col-span-2 col-span-3">
+        <section>
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-xl font-semibold">Recente meldingen</h2>
+            
+            <!-- Sort Controls -->
+            <div class="flex gap-2">
+              <select
+                bind:value={sortBy}
+                class="px-3 py-2 rounded-lg text-sm bg-ctp-surface0 text-ctp-text border border-ctp-surface1 focus:outline-none focus:ring-2 focus:ring-ctp-sapphire"
+              >
+                <option value="date">Datum</option>
+                <option value="status">Status</option>
+                <option value="name">Naam</option>
+              </select>
+              <button
+                onclick={() => sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'}
+                class="px-3 py-2 rounded-lg text-sm bg-ctp-surface0 text-ctp-text hover:bg-ctp-surface1 transition-colors"
+                title={sortOrder === 'asc' ? 'Oplopend' : 'Aflopend'}
+              >
+                {sortOrder === 'asc' ? '↑' : '↓'}
+              </button>
+            </div>
+          </div>
+
+          {#if recent && recent.length}
+            <div class="klachten-list-dashboard">
+              {#each displayedKlachten() as k}
+                <a
+                  class="klacht-card-dashboard"
+                  href={`/dashboard/klacht/${k.id}`}
+                >
+                  <div class="klacht-card-row-dashboard">
+                    <div class="klacht-card-in-dashboard w-full">
+                      <div class="klacht-header-dashboard w-full">
+                        <span class="klacht-name-dashboard">{k.name}</span>
+                        <span class="status-badge-dashboard status-{k.status || 'open'}">
+                          {k.status === 'in_progress' ? 'In Behandeling' : k.status === 'completed' ? 'Afgerond' : 'Open'}
+                        </span>
+                      </div>
+                      <div class="klacht-meta-dashboard">
+                        <span class="meta-item-dashboard">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7V3m8 4V3M3 11h18M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"/></svg>
+                          <span>{new Date(k.created_at).toLocaleDateString('nl-NL')}</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              {/each}
+            </div>
+          {:else}
+            <p class="text-sm text-gray-400">Geen recente meldingen.</p>
+          {/if}
+        </section>
+      </div>
+      <!-- Graphs and stats on the right (col-span-1) -->
+
+      <div class="flex flex-col gap-4 md:col-span-1 col-span-3">
+
+        <div class="p-2 rounded-xl bg-ctp-mantle shadow-md overflow-hidden">
+          <div class="flex items-center justify-between p-3">
+            <div>
+              <div class="text-sm text-ctp-text">{gifEntry.label}</div>
+            </div>
+            <div class="text-xs text-ctp-text">GIF</div>
+          </div>
+          <div class="h-[225px] flex justify-center items-center bg-ctp-black">
+            <img
+              src={gifEntry.url}
+              alt="fun gif"
+              class=" h-max-[225px] h-full object-cover"
+            />
           </div>
         </div>
-      </div>
-
-      <div class="flex flex-col gap-4">
         <div
           class="p-4 rounded-xl shadow-md flex flex-row justify-between"
           style="background: linear-gradient(180deg, var(--catppuccin-color-crust), var(--catppuccin-color-mantle)); color: var(--catppuccin-color-text);"
@@ -226,21 +344,16 @@
           </div>
         </div>
 
-        <div class="p-2 rounded-xl bg-ctp-mantle shadow-md overflow-hidden">
-          <div class="flex items-center justify-between p-3">
-            <div>
-              <div class="text-sm text-ctp-text">{gifEntry.label}</div>
-            </div>
-            <div class="text-xs text-ctp-text">GIF</div>
-          </div>
-          <div class="h-[225px] flex justify-center items-center bg-ctp-black">
-            <img
-              src={gifEntry.url}
-              alt="fun gif"
-              class=" h-max-[225px] h-full object-cover"
-            />
+
+        <div
+          class="p-6 rounded-3xl shadow-2xl flex items-center justify-center"
+          style="background: linear-gradient(135deg, var(--catppuccin-color-mantle), var(--catppuccin-color-crust)); color: var(--catppuccin-color-text);"
+        >
+          <div class="w-full max-w-full relative px-2 py-2">
+            <canvas bind:this={chartCanvas} class="w-full rounded-lg"></canvas>
           </div>
         </div>
+
       </div>
     </section>
     <section>

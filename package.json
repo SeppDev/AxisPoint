@@ -5,6 +5,7 @@
     "@catppuccin/tailwindcss": "^1.0.0",
     "@internationalized/date": "^3.8.2",
     "@lucide/svelte": "<1.0",
+    "@types/leaflet.markercluster": "^1.5.6",
     "bits-ui": "^2.9.1",
     "clsx": "^2.1.1",
     "eslint": "^9.32.0",
@@ -27,7 +28,7 @@
     "vite-plugin-ruby": "^5.1.1"
   },
   "dependencies": {
-    "chart.js": "^4.4.0",
+    "@faker-js/faker": "^9.4.0",
     "@inertiajs/svelte": "^2.0.17",
     "@sveltejs/vite-plugin-svelte": "^6.1.0",
     "@tailwindcss/forms": "^0.5.10",
@@ -35,7 +36,9 @@
     "@tailwindcss/vite": "^4.1.11",
     "@tsconfig/svelte": "^5.0.4",
     "@types/leaflet": "^1.9.20",
+    "chart.js": "^4.4.0",
     "leaflet": "^1.9.4",
+    "leaflet.markercluster": "^1.5.3",
     "svelte-check": "^4.3.1",
     "tailwindcss": "^4.1.11",
     "tslib": "^2.8.1",
@@ -46,6 +49,7 @@
     "lint": "eslint app/frontend --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --check 'app/frontend/**/*.{ts,tsx,js,svelte}'",
-    "format:fix": "npm run format -- --write"
+    "format:fix": "npm run format -- --write",
+    "seed:klachten": "node bin/seed-klachten.js"
   }
 }
