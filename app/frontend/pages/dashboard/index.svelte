@@ -191,6 +191,31 @@
     // update gif when stats.open changes
     gifEntry = gifForOpen(stats.open ?? 0);
   });
+
+  // Filter and sorting state for meldingen
+  let viewMode = $state<'recent' | 'all'>('recent');
+  let sortBy = $state<'date' | 'status' | 'name'>('date');
+  let sortOrder = $state<'asc' | 'desc'>('desc');
+
+  const displayedKlachten = $derived(() => {
+    let filtered = viewMode === 'recent' ? recent.slice(0, 5) : [...recent];
+    
+    // Sort the filtered list
+    filtered.sort((a, b) => {
+      let comparison = 0;
+      if (sortBy === 'date') {
+        comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      } else if (sortBy === 'status') {
+        const statusOrder = { open: 0, in_progress: 1, completed: 2 };
+        comparison = (statusOrder[a.status as keyof typeof statusOrder] ?? 0) - (statusOrder[b.status as keyof typeof statusOrder] ?? 0);
+      } else if (sortBy === 'name') {
+        comparison = a.name.localeCompare(b.name);
+      }
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+    
+    return filtered;
+  });
 </script>
 
 <Layout>
@@ -211,10 +236,51 @@
       <!-- List of klachten on the left (col-span-2 on small screens, col-span-2 on md+) -->
       <div class="md:col-span-2 col-span-3">
         <section>
-          <h2 class="text-xl font-semibold mb-3">Recente meldingen</h2>
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-xl font-semibold">Meldingen</h2>
+          </div>
+
+          <!-- Tabs and Sorting Controls -->
+          <div class="flex flex-col sm:flex-row gap-3 mb-4">
+            <!-- View Mode Tabs -->
+            <div class="flex gap-2">
+              <button
+                class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors {viewMode === 'recent' ? 'bg-ctp-sapphire text-ctp-crust' : 'bg-ctp-surface0 text-ctp-text hover:bg-ctp-surface1'}"
+                onclick={() => viewMode = 'recent'}
+              >
+                Recent (5)
+              </button>
+              <button
+                class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors {viewMode === 'all' ? 'bg-ctp-sapphire text-ctp-crust' : 'bg-ctp-surface0 text-ctp-text hover:bg-ctp-surface1'}"
+                onclick={() => viewMode = 'all'}
+              >
+                Alle ({recent.length})
+              </button>
+            </div>
+
+            <!-- Sort Controls -->
+            <div class="flex gap-2 flex-wrap">
+              <select
+                bind:value={sortBy}
+                class="px-3 py-2 rounded-lg text-sm bg-ctp-surface0 text-ctp-text border border-ctp-surface1 focus:outline-none focus:ring-2 focus:ring-ctp-sapphire"
+              >
+                <option value="date">Datum</option>
+                <option value="status">Status</option>
+                <option value="name">Naam</option>
+              </select>
+              <button
+                onclick={() => sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'}
+                class="px-3 py-2 rounded-lg text-sm bg-ctp-surface0 text-ctp-text hover:bg-ctp-surface1 transition-colors"
+                title={sortOrder === 'asc' ? 'Oplopend' : 'Aflopend'}
+              >
+                {sortOrder === 'asc' ? '↑' : '↓'}
+              </button>
+            </div>
+          </div>
+
           {#if recent && recent.length}
             <div class="klachten-list-dashboard">
-              {#each recent as k}
+              {#each displayedKlachten() as k}
                 <a
                   class="klacht-card-dashboard"
                   href={`/dashboard/klacht/${k.id}`}
