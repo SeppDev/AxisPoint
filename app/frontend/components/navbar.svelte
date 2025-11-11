@@ -18,18 +18,17 @@
 </script>
 
 <div
-  class=" p-2 bg-ctp-crust h-12 w-screen top-0 z-50 justify-between flex flex-row items-center text-2xl"
+  class="p-2 bg-ctp-crust w-screen top-0 z-50 justify-between flex lg:flex-row flex-col items-center text-2xl"
 >
   <div class="pl-2">
     <a href="/" class="flex items-center gap-2">
-      <!-- animated sigma, tilted to the side -->
       <AnimatedSigma size={36} tilt={0} className="text-ctp-text" />
       <span class="text-lg font-extrabold text-ctp-text"
         ><span class=" text-ctp-sapphire">Axis</span>Point</span
       >
     </a>
   </div>
-  <nav class="flex items-center gap-4 pr-4">
+  <nav class="flex justify-center items-center gap-4 pr-4 flex-wrap">
     <a href="/">home</a>
     <a href="/melden">melden</a>
     {#if authUser}
